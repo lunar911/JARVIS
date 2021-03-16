@@ -7,6 +7,5 @@ compile
 compile.exe
 COPYING.txt
 README.txt
-rte.java
 sjc.jar
 syminfo.txt
