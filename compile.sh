@@ -1,0 +1,1 @@
+./compile "$@" -o boot && qemu-system-x86_64 -no-kvm -m 32 -boot a -fda BOOT_FLP.IMG
