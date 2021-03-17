@@ -1,1 +1,1 @@
-./compile "$@" -o boot && qemu-system-x86_64 -m 32 -boot a -fda BOOT_FLP.IMG
+./compile $(ls -d src/*/*.java) -o boot && qemu-system-x86_64 -m 32 -boot a -fda BOOT_FLP.IMG

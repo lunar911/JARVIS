@@ -1,4 +1,5 @@
 package kernel;
+import screen.*;
 
 public class Kernel {
 

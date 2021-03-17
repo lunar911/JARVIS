@@ -7,11 +7,7 @@
             "label": "run",
             "type": "shell",
             "command": "~/developer/BSIE/JARVIS/compile.sh",
-            "args": [
-                "kernel.java",
-                "rte.java",
-                "screen.java"
-            ],
+            "args": [],
             "problemMatcher": []
         }
     ]
