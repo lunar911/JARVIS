@@ -2,38 +2,36 @@ package screen;
 
 public class Cursor {
 
-  public int X = 0;
-  public int Y = 0;
+  private int X = 0;
+  private int Y = 0;
   private final int width = 80;
   private final int height = 25;
 
   public void setX(int newX) {
-    if (newX <= 80 && newX >= 0) {
+    if (newX < width && newX >= 0) {
       X = newX;
     }
   }
 
   public void setY(int newY) {
-    if (newY <= 80 && newY >= 0) {
+    if (newY < height && newY >= 0) {
       Y = newY;
     }
   }
 
+  public void setPos(int pos) {
+    if (pos < 0 || pos >= 2000) pos = 0;
+
+    setY(pos / width);
+    setX(pos % width);
+  }
+
   public int getPos() {
-    return Y * width + X;
+    return (Y * 80) + X;
   }
 
   // handle scrolling in terminal internally
   public void moveNextPos() {
-    if (X + 1 > width) {
-      X = 0;
-      if (Y + 1 > height) {
-        Y = 0;
-      } else {
-        Y += 1;
-      }
-    } else {
-      X += 1;
-    }
+    setPos(getPos() + 1);
   }
 }
