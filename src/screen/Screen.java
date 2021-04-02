@@ -4,9 +4,9 @@ public class Screen {
 
   private static final int VIDEOBUFFER = 2000;
 
-  private byte foregroundColor = Constants.BLUE;
+  private byte foregroundColor = Constants.GREY;
   private byte backgroundColor = Constants.BLACK;
-  private Cursor cursor;
+  private Cursor cursor = new Cursor();
   private VidMem vidMem;
 
   public Screen() {
@@ -30,11 +30,11 @@ public class Screen {
   public void print(char c) {
     vidMem.expl[cursor.getPos()].ascii = (byte) c;
     vidMem.expl[cursor.getPos()].color = foregroundColor;
+    cursor.moveNextPos();
   }
 
   public void print(int x) {
-    //String s = String.valueOf(x);
-    //print(s);
+
   }
 
   public void printHex(byte b) {}
