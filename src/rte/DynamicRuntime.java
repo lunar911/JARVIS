@@ -79,4 +79,9 @@ public class DynamicRuntime {
   public static void checkArrayStore(Object dest, SArray newEntry) {
     while (true);
   }
+
+  public static void nullException() {
+    //vielleicht noch was ausgeben...
+    while (true);
+  }
 }
