@@ -39,20 +39,26 @@ public class Screen {
     if (x != 0) {
       int base = 10;
       int digitCount = Math.getDigitCount(x);
-      cursor.setPos(cursor.getPos() + digitCount - 1); // shift cursor right
 
-      int count = 0;
-      while (x > 0) { // print digits right to left
-        char digit = Math.Int2Ascii(x % base);
-        print(digit); // CAUTION: shifts +1 right
-        cursor.setPos(cursor.getPos() - 2); // shift left twice to compensate prev shift
-        x /= base;
-        count++;
-      }
-      if (cursor.getPos() == 0) {
-        cursor.setPos(cursor.getPos() + digitCount);
+      if (digitCount == 1) {
+        print(Math.Int2Ascii(x));
+        x = 0;
       } else {
-        cursor.setPos(cursor.getPos() + digitCount + 1);
+        cursor.setPos(cursor.getPos() + digitCount - 1); // shift cursor right
+
+        int count = 0;
+        while (x > 0) { // print digits right to left
+          char digit = Math.Int2Ascii(x % base);
+          print(digit); // CAUTION: shifts +1 right
+          cursor.setPos(cursor.getPos() - 2); // shift left twice to compensate prev shift
+          x /= base;
+          count++;
+        }
+        if (cursor.getPos() == 0) { // workaround for a issue I'm not really getting..
+          cursor.setPos(cursor.getPos() + digitCount);
+        } else {
+          cursor.setPos(cursor.getPos() + digitCount + 1);
+        }
       }
     } else {
       print('0');
