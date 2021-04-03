@@ -30,8 +30,17 @@ public class Cursor {
     return (Y * 80) + X;
   }
 
-  // handle scrolling in terminal internally
   public void moveNextPos() {
     setPos(getPos() + 1);
+  }
+
+  public void jumpNextLine() {
+    if (getPos() % width == 0) {
+      setPos(getPos() + width);
+    } else {
+      while (getPos() % width != 0) {
+        moveNextPos();
+      }
+    }
   }
 }
