@@ -22,6 +22,22 @@ public class Math {
   };
 
   public static int getDigitCount(int num) {
+    return getDigitCount((long) num);
+  }
+
+  public static int getHexDigitCount(int num) {
+    return getHexDigitCount((long) num);
+  }
+
+  public static char Int2HexChar(int num) {
+    return Int2HexChar((long) num);
+  }
+
+  public static char Int2Ascii(int num) {
+    return Int2Ascii((long) num);
+  }
+
+  public static int getDigitCount(long num) {
     if(num == 0) return 1;
     
     int count = 0;
@@ -32,7 +48,7 @@ public class Math {
     return count;
   }
 
-  public static int getHexDigitCount(int num) {
+  public static int getHexDigitCount(long num) {
     if(num == 0) return 1;
     
     int count = 0;
@@ -43,17 +59,17 @@ public class Math {
     return count;
   }
 
-  public static char Int2HexChar(int num) {
+  public static char Int2HexChar(long num) {
     if (num < 16 && num >= 0) {
-      return DIGITS[num];
+      return DIGITS[(int) num];
     } else {
       return '~';
     }
   }
 
-  public static char Int2Ascii(int num) {
+  public static char Int2Ascii(long num) {
     if (num < 10 && num >= 0) {
-      return DIGITS[num];
+      return DIGITS[(int) num];
     } else {
       return '~';
     }

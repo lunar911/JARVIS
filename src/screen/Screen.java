@@ -35,47 +35,28 @@ public class Screen {
     cursor.moveNextPos();
   }
 
-  public void print(int x) {
-    if (x != 0) {
-      int base = 10;
-      int digitCount = Math.getDigitCount(x);
-
-      if (digitCount == 1) {
-        print(Math.Int2Ascii(x));
-        x = 0;
-      } else {
-        cursor.setPos(cursor.getPos() + digitCount - 1); // shift cursor right
-
-        int count = 0;
-        while (x > 0) { // print digits right to left
-          char digit = Math.Int2Ascii(x % base);
-          print(digit); // CAUTION: shifts +1 right
-          cursor.setPos(cursor.getPos() - 2); // shift left twice to compensate prev shift
-          x /= base;
-          count++;
-        }
-        if (cursor.getPos() == 0) { // workaround for an issue I'm not really getting..
-          cursor.setPos(cursor.getPos() + digitCount);
-        } else {
-          cursor.setPos(cursor.getPos() + digitCount + 1);
-        }
-      }
-    } else {
-      print('0');
-    }
+  public void print(int num) {
+    long castedValue = (long) num;
+    print(castedValue);
   }
 
   public void printHex(byte b) {
-    int castedValue = (int) b;
+    long castedValue = (long) b;
     printHex(castedValue);
   }
 
   public void printHex(short s) {
-    int castedValue = (int) s;
+    long castedValue = (long) s;
     printHex(castedValue);
   }
 
   public void printHex(int num) {
+    long castedValue = (long) num;
+    printHex(castedValue);
+
+  }
+
+  public void printHex(long num) {
     print("0x");
 
     if (num != 0) {
@@ -107,9 +88,35 @@ public class Screen {
     }
   }
 
-  public void printHex(long x) {}
+  public void print(long num) {
+    if (num != 0) {
+      int base = 10;
+      int digitCount = Math.getDigitCount(num);
 
-  public void print(long x) {}
+      if (digitCount == 1) {
+        print(Math.Int2Ascii(num));
+        num = 0;
+      } else {
+        cursor.setPos(cursor.getPos() + digitCount - 1); // shift cursor right
+
+        int count = 0;
+        while (num > 0) { // print digits right to left
+          char digit = Math.Int2Ascii(num % base);
+          print(digit); // CAUTION: shifts +1 right
+          cursor.setPos(cursor.getPos() - 2); // shift left twice to compensate prev shift
+          num /= base;
+          count++;
+        }
+        if (cursor.getPos() == 0) { // workaround for an issue I'm not really getting..
+          cursor.setPos(cursor.getPos() + digitCount);
+        } else {
+          cursor.setPos(cursor.getPos() + digitCount + 1);
+        }
+      }
+    } else {
+      print('0');
+    }
+  }
 
   public void print(String str) {
     for (int i = 0; i < str.length(); i++) print(str.charAt(i));
