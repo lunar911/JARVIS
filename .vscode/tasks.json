@@ -9,6 +9,13 @@
             "command": "~/developer/BSIE/JARVIS/compile.sh",
             "args": [],
             "problemMatcher": []
+        },
+        {
+            "label": "release",
+            "type": "shell",
+            "command": "~/developer/BSIE/JARVIS/release.sh",
+            "args": [],
+            "problemMatcher": []
         }
     ]
 }
