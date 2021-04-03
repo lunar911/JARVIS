@@ -3,6 +3,7 @@ package rte;
 public class DynamicRuntime {
 
   private static int nextFreeAddress = 0;
+  private static int firstFreeAddress = 0;
 
   public static Object newInstance(
     int scalarSize,
@@ -10,25 +11,27 @@ public class DynamicRuntime {
     SClassDesc type
   ) {
     if (nextFreeAddress == 0) {
-      nextFreeAddress =
-        (MAGIC.imageBase + MAGIC.rMem32(MAGIC.imageBase + 4) + 0xFFF) & ~0xFFF;
+      int imageSize = MAGIC.rMem32(MAGIC.imageBase + 4);
+      firstFreeAddress = (MAGIC.imageBase + imageSize + 0xFFF) & ~0xFFF;
+      nextFreeAddress = firstFreeAddress;
     }
 
-    int start, rs, i; // temporäre Variablen
-    rs = relocEntries << 2; // pro Reloc werden 4 Bytes benötigt
-    scalarSize = (scalarSize + 3) & ~3; // Alignierung der Skalare
-    start = nextFreeAddress; // Start des Objektes
-    nextFreeAddress += rs + scalarSize; // nächstes Objekt hinter aktuellem platzieren
+    int rs = relocEntries << 2;
+    scalarSize = (scalarSize + 3) & ~3; // Align to multiples of 4
+    int start = nextFreeAddress; // Start of current new object
+    nextFreeAddress += rs + scalarSize; // offset for next new object
 
-    for (i = start; i < nextFreeAddress; i += 4) {
-      MAGIC.wMem32(i, 0); // 0-Init
+    for (int i = start; i < nextFreeAddress; i += 4) {
+      MAGIC.wMem32(i, 0); // init memory for object with 0
     }
 
-    Object me = MAGIC.cast2Obj(start + rs); // Objekt platzieren
-    MAGIC.assign(me._r_relocEntries, relocEntries); // Zahl der Relocs in Objekt eintragen
-    MAGIC.assign(me._r_scalarSize, scalarSize); // Größe der Skalare in Objekt eintragen
-    MAGIC.assign(me._r_type, type); // Typ des Objekts in Objekt eintragen
-    return me; // Objekt an Aufrufer zurückgeben
+    Object newObj = MAGIC.cast2Obj(start + rs); // offset object by its references
+    MAGIC.assign(newObj._r_relocEntries, relocEntries);
+    MAGIC.assign(newObj._r_scalarSize, scalarSize);
+    MAGIC.assign(newObj._r_type, type);
+    MAGIC.assign(newObj._r_next, MAGIC.cast2Obj(nextFreeAddress));
+    
+    return newObj;
   }
 
   public static SArray newArray(
