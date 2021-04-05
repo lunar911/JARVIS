@@ -10,7 +10,7 @@ public class Kernel {
 
     InterruptHandler.initPic();
     
-    //MAGIC.inline(0xCC); // trigger interrupt
+    MAGIC.inline(0xCC); // trigger interrupt
 
     while (true);
   }
