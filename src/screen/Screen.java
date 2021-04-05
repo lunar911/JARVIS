@@ -34,6 +34,18 @@ public class Screen {
     vidMem.expl[cursor.getPos()].color = foregroundColor;
     cursor.moveNextPos();
   }
+  private static int vidPos = 0xB8000;
+  public static void printStatic(char c) {
+    MAGIC.wMem8(vidPos, (byte) c);
+    MAGIC.wMem8(vidPos + 1, (byte) 0x07);
+    vidPos += 2;
+  }
+  public static void printStatic(String s) {
+    for(int i = 0; i < s.length(); i++)
+    {
+      printStatic(s.charAt(i));
+    }
+  }
 
   public void print(int num) {
     long castedValue = (long) num;
