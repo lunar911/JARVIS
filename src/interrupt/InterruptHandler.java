@@ -7,23 +7,30 @@ public class InterruptHandler {
   private static final int MASTER = 0x20, SLAVE = 0xA0;
 
   public static void initPic() {
-    programmChip(MASTER, 0x20, 0x04); //init offset and slave config of master
-    programmChip(SLAVE, 0x28, 0x02); //init offset and slave config of slave
-    
     final int interruptAdressStart = 0x07E00;
-    
+
     //create IDT
-    for(int i = 0; i < 48 ; i++) {
-      int currentAdress = interruptAdressStart + i * 4;
-      InterruptDescriptor iDescriptor = (InterruptDescriptor) MAGIC.cast2Struct(currentAdress);
-      iDescriptor.offset15_0 = (short) 33536; // 1000 0011 0000 000 -> from lecture
-      iDescriptor.segmentSelector = (short) 8;  
+    for (int i = 0; i < 48; i++) {
+      int currentAdress = interruptAdressStart + i * 8;
+      InterruptDescriptor iDescriptor = (InterruptDescriptor) MAGIC.cast2Struct(
+        currentAdress
+      );
+      int methodOffset = MAGIC.mthdOff("InterruptHandler", "nohandle");
+      int handlerMemAddress = MAGIC.cast2Ref(MAGIC.clssDesc("InterruptHandler")) + methodOffset;
+      int handlerRefAddress = MAGIC.rMem32(handlerMemAddress);
+      int handlerReference = handlerRefAddress + MAGIC.getCodeOff();
+
+      iDescriptor.leftOffset = (short) ((handlerReference & 0xFFFF0000) >>> 16); 
+      iDescriptor.segmentSelector = (short) 8;
+      iDescriptor.configurationBits = (short) 0x8E00;
+      iDescriptor.rightOffset = (short) (handlerReference & 0xFFFF);
     }
 
-    loadIDT(interruptAdressStart, 4 * 48); // load IDT
+    loadIDT(interruptAdressStart, 8 * 48); // load IDT
 
-    MAGIC.inline(0xFB); // enable interrupts
-  
+    programmChip(MASTER, 0x20, 0x04); //init offset and slave config of master
+    programmChip(SLAVE, 0x28, 0x02); //init offset and slave config of slave
+    MAGIC.inline(0xFB); // enable ALL interrupts
   }
 
   private static void programmChip(int port, int offset, int icw3) {
@@ -34,18 +41,13 @@ public class InterruptHandler {
   }
 
   private static void loadIDT(int baseAddress, int tableLimit) {
-    long tmp=(((long)baseAddress)<<16)|(long)tableLimit;
-    MAGIC.inline(0x0F, 0x01, 0x5D); MAGIC.inlineOffset(1, tmp); // lidt [ebp-0x08/tmp]
+    long tmp = (((long) baseAddress) << 16) | (long) tableLimit;
+    MAGIC.inline(0x0F, 0x01, 0x5D);
+    MAGIC.inlineOffset(1, tmp); // lidt [ebp-0x08/tmp]
   }
 
   @SJC.Interrupt
   public static void nohandle() {
-    Screen.printStatic("ici");
-    while (true);
-  }
-
-  @SJC.Interrupt
-  public static void nohandle(int x) {
     Screen.printStatic("ici");
     while (true);
   }
