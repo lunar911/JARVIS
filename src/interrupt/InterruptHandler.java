@@ -70,14 +70,11 @@ public class InterruptHandler {
     createIDTEntry(0x2F, MAGIC.mthdOff("InterruptHandler", "nohandle")); // further devices
   }
 
-  private static int createIDTEntry(int interruptOffset, int handlerOffset) {
+  private static void createIDTEntry(int interruptOffset, int handlerOffset) {
     InterruptDescriptor iDescriptor = (InterruptDescriptor) MAGIC.cast2Struct(
       currentAdress + interruptOffset * 8
     );
-    int handlerAdress = getHandlerAdress(
-      MAGIC.mthdOff("InterruptHandler", "nohandle")
-    );
-
+    int handlerAdress = getHandlerAdress(handlerOffset);
     iDescriptor.firstOffset = (short) ((handlerAdress & 0xFFFF0000) >>> 16);
     iDescriptor.segmentSelector = (short) 8;
     iDescriptor.configurationBits = (short) 0x8E00;

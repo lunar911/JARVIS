@@ -10,7 +10,7 @@ public class Kernel {
 
     InterruptHandler.initPic();
     
-    MAGIC.inline(0xCC);
+    MAGIC.inline(0xCD, 0x00); // trigger divideError interrupt
 
     while (true);
   }
