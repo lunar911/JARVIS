@@ -1,5 +1,6 @@
 package interrupt;
 
+import helpers.*;
 import screen.*;
 
 public class InterruptHandler {
@@ -33,7 +34,10 @@ public class InterruptHandler {
     createIDTEntry(0xA, MAGIC.mthdOff("InterruptHandler", "nohandle")); // reserved
     createIDTEntry(0xB, MAGIC.mthdOff("InterruptHandler", "nohandle")); // reserved
     createIDTEntry(0xC, MAGIC.mthdOff("InterruptHandler", "nohandle")); // reserved
-    createIDTEntry(0xD, MAGIC.mthdOff("InterruptHandler", "generalProtectionError"));
+    createIDTEntry(
+      0xD,
+      MAGIC.mthdOff("InterruptHandler", "generalProtectionError")
+    );
     createIDTEntry(0xE, MAGIC.mthdOff("InterruptHandler", "pageFault"));
     createIDTEntry(0xF, MAGIC.mthdOff("InterruptHandler", "nohandle")); // reserved
     createIDTEntry(0x10, MAGIC.mthdOff("InterruptHandler", "nohandle")); // reserved
@@ -102,81 +106,76 @@ public class InterruptHandler {
     MAGIC.inlineOffset(1, tmp); // lidt [ebp-0x08/tmp]
   }
 
+  public static void loadInterruptDescriptorTableRealMode() {
+    int tableLimit = 4 * 48; // Byte count in table
+    long tmp = (long) 0 | (long) tableLimit; // 0 is the table base address
+    MAGIC.inline(0x0F, 0x01, 0x5D);
+    MAGIC.inlineOffset(1, tmp); // lidt [ebp-0x08/tmp]
+  }
+
   @SJC.Interrupt
   public static void nohandle() {
     Screen.printStatic("nohandle");
-    while (true);
   }
 
   @SJC.Interrupt
   public static void divideError() {
     Screen.printStatic("divideError");
-    while (true);
   }
 
   @SJC.Interrupt
   public static void debugException() {
     Screen.printStatic("debugException");
-    while (true);
   }
 
   @SJC.Interrupt
   public static void NMI() {
     Screen.printStatic("NMI");
-    while (true);
   }
 
   @SJC.Interrupt
   public static void breakpoint() {
     Screen.printStatic("breakpoint");
-    while (true);
   }
 
   @SJC.Interrupt
   public static void INTO_Overflow() {
     Screen.printStatic("INTO_Overflow");
-    while (true);
   }
 
   @SJC.Interrupt
   public static void indexOutOfRange() {
     Screen.printStatic("indexOutOfRange");
-    while (true);
   }
 
   @SJC.Interrupt
   public static void invalidOpcode() {
     Screen.printStatic("invalidOpcode");
-    while (true);
   }
 
   @SJC.Interrupt
   public static void doubleFault() {
     Screen.printStatic("doubleFault");
-    while (true);
   }
 
   @SJC.Interrupt
   public static void generalProtectionError() {
     Screen.printStatic("generalProtectionError");
-    while (true);
   }
 
   @SJC.Interrupt
   public static void pageFault() {
     Screen.printStatic("PageFault");
-    while (true);
   }
 
   @SJC.Interrupt
   public static void timer() {
-    Screen.printStatic("Timer");
-    while (true);
+    Time.now += 1;
+    MAGIC.wIOs8(MASTER, (byte) 0x20);
   }
 
   @SJC.Interrupt
   public static void keyBoard() {
     Screen.printStatic("Keyboard");
-    while (true);
   }
 }
