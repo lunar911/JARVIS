@@ -10,18 +10,21 @@ public class Keyboard {
   private static boolean shift = false;
   private static boolean caps = false;
   private static boolean alt = false;
+  private static int key = 0;
+  private static int e0_code = 0;
+  private static short e1_code = 0;
 
   public static void processKeyEvent() {
-    short newScanCode = (short) (MAGIC.rIOs8(0x60) & 0xFF);
-    newElements++;
-    ringbuffer.push(0x30);
+    short scanCode = (short) MAGIC.rIOs8(0x60);
 
-    newScanCode &= 0x7F;
-    if (newScanCode <= 0xDF) { // 1-Byte Key
+    if (isPressed(scanCode)) {
+      key = scanCode;
       newElements++;
-      int key = 0x30;
-      ringbuffer.push(key);
-    } else if (newScanCode == 0xE0) {} else if (newScanCode == 0xE1) {} else {} // 2-Byte Key // 3-Byte Key // ignore
+    }
+  }
+  
+  public static boolean isPressed(int scanCode) {
+    return (scanCode & 0x80) == 0;
   }
 
   public static boolean isPrintable(int key) {
@@ -33,10 +36,15 @@ public class Keyboard {
   }
 
   public static boolean isNewKeyEvent() {
-    return true;
+    if (newElements == 0) {
+      return false;
+    } else {
+      newElements--;
+      return true;
+    }
   }
 
   public static int getKey() {
-    return ringbuffer.pop();
+    return key;
   }
 }

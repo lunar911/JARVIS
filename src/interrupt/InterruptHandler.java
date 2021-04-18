@@ -177,9 +177,7 @@ public class InterruptHandler {
 
   @SJC.Interrupt
   public static void keyBoard() {
-    Screen.printStatic("lol");
-
-    //Keyboard.processKeyEvent();
+    Keyboard.processKeyEvent();
     MAGIC.wIOs8(MASTER, (byte) 0x20);   
   }
 }
