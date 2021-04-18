@@ -2,6 +2,7 @@ package interrupt;
 
 import helpers.*;
 import screen.*;
+import peripheral.Keyboard;
 
 public class InterruptHandler {
 
@@ -176,6 +177,9 @@ public class InterruptHandler {
 
   @SJC.Interrupt
   public static void keyBoard() {
-    Screen.printStatic("Keyboard");
+    Screen.printStatic("lol");
+
+    //Keyboard.processKeyEvent();
+    MAGIC.wIOs8(MASTER, (byte) 0x20);   
   }
 }

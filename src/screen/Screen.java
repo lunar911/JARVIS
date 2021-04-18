@@ -1,6 +1,6 @@
 package screen;
 
-import helpers.*;
+import helpers.Math;
 
 public class Screen {
 
