@@ -4,9 +4,9 @@ import bios.BIOS;
 import screen.Screen;
 
 public class MemLayout {
+  private final static int buffer = 0x8000;
 
   public static void printMemLayout(Screen screen) {
-    int storeAt = 0x8000;
 
     screen.print("Base Address       | Length             | Type");
     screen.println();
@@ -17,7 +17,7 @@ public class MemLayout {
       BIOS.regs.EDX = 0x534D4150; // SMAP
 
       // store result in
-      BIOS.regs.EDI = storeAt;
+      BIOS.regs.EDI = buffer;
       // buffer size >= 20 bytes
       BIOS.regs.ECX = 24;
 
@@ -32,10 +32,9 @@ public class MemLayout {
         break;
       }
 
-      long baseAddress = MAGIC.rMem64(storeAt);
-      long length = MAGIC.rMem64(storeAt + 8);
-      int type = MAGIC.rMem32(storeAt + 16);
-      int acpi = MAGIC.rMem32(storeAt + 20);
+      long baseAddress = MAGIC.rMem64(buffer);
+      long length = MAGIC.rMem64(buffer + 8);
+      int type = MAGIC.rMem32(buffer + 16);
 
       screen.printHex(baseAddress);
 
@@ -65,8 +64,6 @@ public class MemLayout {
           screen.print("Unknown");
       }
 
-      screen.print(", ACPI = ");
-      screen.print(acpi);
       screen.println();
     }
   }
