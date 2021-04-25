@@ -1,4 +1,4 @@
-package screen;
+package interrupt;
 
 public class InterruptDescriptor extends STRUCT {
 

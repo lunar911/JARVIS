@@ -1,6 +1,7 @@
-package rte;
+package bios;
 
-import interrupt.*;
+import interrupt.InterruptHandler;
+
 
 public class BIOS {
 
@@ -194,5 +195,15 @@ public class BIOS {
     InterruptHandler.initPic();
 
     MAGIC.inline(0x9D); //popf
+  }
+
+  public static void enterGraphicmode() {
+    BIOS.regs.EAX = 0x0013;
+    BIOS.rint(0x10);
+  }
+
+  public static void leaveGraphicmode() {
+    BIOS.regs.EAX = 0x0003;
+    BIOS.rint(0x10);
   }
 }

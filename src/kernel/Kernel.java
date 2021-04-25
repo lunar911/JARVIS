@@ -1,10 +1,12 @@
 package kernel;
 
+import applications.MemLayout;
 import interrupt.InterruptHandler;
 import peripheral.Key;
 import peripheral.Keyboard;
 import rte.*;
 import screen.Screen;
+
 
 public class Kernel {
 
@@ -12,6 +14,10 @@ public class Kernel {
     Screen.clearScreen();
     InterruptHandler.initPic();
     Screen screen = new Screen();
+
+    MemLayout.printMemLayout(screen);
+    screen.println();
+
 
     while (true) {
       if (Keyboard.isNewKeyEvent()) {

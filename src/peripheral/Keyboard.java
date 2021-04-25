@@ -1,7 +1,5 @@
 package peripheral;
 
-import screen.Screen;
-
 public class Keyboard {
 
   private static int newElements = 0;
