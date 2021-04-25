@@ -6,6 +6,7 @@ public class Key {
 	public static final int SPACE = ' ';
 	public static final int EXCLAMATION_MARK = '!';
 	public static final int QUOTATION_MARK = '"';
+	//public static final int SECTION_KEY = '§';
 	public static final int POUND_KEY = '#';
 	public static final int DOLLAR_KEY = '$';
 	public static final int PERCENT_KEY = '%';
