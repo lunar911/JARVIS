@@ -1,6 +1,6 @@
 package kernel;
 
-import applications.MemLayout;
+import applications.*;
 import interrupt.InterruptHandler;
 import peripheral.Key;
 import peripheral.Keyboard;
@@ -15,7 +15,7 @@ public class Kernel {
     InterruptHandler.initPic();
     Screen screen = new Screen();
 
-    MemLayout.printMemLayout(screen);
+    MemoryMap.printMemLayout(screen);
     screen.println();
 
 
