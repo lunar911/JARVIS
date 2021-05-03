@@ -34,6 +34,13 @@ public class Cursor {
     setPos(getPos() + 1);
   }
 
+  public void nextTabStop() {
+    if (getPos() % 8 != 0) {
+      int next = getPos() + 8 - (getPos() % 8);
+      setPos(next);
+    }
+  }
+
   public void jumpNextLine() {
     if (getPos() % width == 0) {
       setPos(getPos() + width);

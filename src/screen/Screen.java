@@ -34,6 +34,12 @@ public class Screen {
     vidMem.expl[cursor.getPos()].color = foregroundColor;
     cursor.moveNextPos();
   }
+
+  public void nextTabStop() {
+    cursor.nextTabStop();
+  }
+  
+
   private static int vidPos = 0xB8000;
   public static void printStatic(char c) {
     MAGIC.wMem8(vidPos, (byte) c);
