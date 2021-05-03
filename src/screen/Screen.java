@@ -71,6 +71,7 @@ public class Screen {
   public void printHex(long num) {
     print("0x");
 
+    if(num < 0) num = num >>> 1;
     if (num != 0) {
       int digitCount = Math.getHexDigitCount(num);
       

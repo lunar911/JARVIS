@@ -15,7 +15,10 @@ public class Kernel {
     InterruptHandler.initPic();
     Screen screen = new Screen();
 
-    MemoryMap.printMemLayout(screen);
+    //MemoryMap.printMemLayout(screen);
+    //screen.println();
+
+    PCIScan.printPCIBus(screen);
     screen.println();
 
 
