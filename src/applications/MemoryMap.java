@@ -9,7 +9,11 @@ public class MemoryMap {
   private static final int buffer = 0x8000;
 
   public static void printMemLayout(Screen screen) {
-    screen.print("Base Address       | Length             | Type");
+    screen.print("Base Address");
+    screen.nextTabStop();
+    screen.print("|Length");
+    screen.nextTabStop();
+    screen.print("|Type");
     screen.println();
 
     BIOS.regs.EBX = 0;
@@ -43,13 +47,12 @@ public class MemoryMap {
     int type
   ) {
     screen.printHex(startAddress);
-
-    screen.print(" | ");
+    screen.nextTabStop();
+    screen.print("|");
     screen.printHex(endAddress);
 
-    screen.print(" | (");
-    screen.print(type);
-    screen.print(") ");
+    screen.nextTabStop();
+    screen.print("|");
     switch (type) {
       case 1:
         screen.print("Free Memory");
