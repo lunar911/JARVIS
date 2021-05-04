@@ -108,7 +108,17 @@ public class PCIScan {
   }
 
   public static void scanPCIBus(Screen screen) {
-    screen.print("deviceID | vendorID | baseCCode | subCCode");
+    screen.print("deviceID");
+    screen.nextTabStop();
+    screen.print("|");
+    screen.print("vendorID");
+    screen.nextTabStop();
+    screen.print("|");
+    screen.print("baseCCode");
+    screen.nextTabStop();
+    screen.print("|");
+    screen.print("subCCode");
+
     screen.println();
 
     for (int deviceNumber = 0; deviceNumber < 32; deviceNumber++) {
