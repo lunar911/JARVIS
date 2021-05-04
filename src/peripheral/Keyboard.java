@@ -12,7 +12,7 @@ public class Keyboard {
   private static boolean alt = false;
 
   public static void processKeyEvent() {
-    short scanCode = (short) MAGIC.rIOs8(0x60);
+    int scanCode = MAGIC.rIOs8(0x60) & 0xFF;
     int break_code = 0;
 
     if (
@@ -34,7 +34,7 @@ public class Keyboard {
     } else if (e1_code == 2) {
       // Fertiger e1-Scancode
       // Zweiten Scancode in hoeherwertiges Byte packen
-      e1_prev |= ((short) scanCode << 8);
+      e1_prev |= (scanCode << 8);
       storeToBuffer(scanCode);
       e1_code = 0;
     } else if (e1_code == 1) {
