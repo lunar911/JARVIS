@@ -1,5 +1,7 @@
 package peripheral;
 
+import screen.Screen;
+
 public class Keyboard {
 
   private static int newElements = 0;
@@ -14,7 +16,6 @@ public class Keyboard {
   public static void processKeyEvent() {
     int scanCode = MAGIC.rIOs8(0x60) & 0xFF;
     int break_code = 0;
-
     if (
       ((scanCode & 0x80) == 0) &&
       ((e1_code != 0) || (scanCode != 0xE1)) &&
@@ -63,7 +64,13 @@ public class Keyboard {
   }
 
   public static void checkSpecialKeys(int scanCode) {
-    if (scanCode == Key.LEFT_SHIFT || scanCode == Key.RIGHT_SHIFT) {
+    int translatedCode = Layout.translatePhysToLogicalKey(
+      scanCode,
+      shift,
+      caps,
+      alt
+    );
+    if (translatedCode == Key.LEFT_SHIFT || translatedCode == Key.RIGHT_SHIFT) {
       if (shift) {
         shift = false;
       } else {
@@ -71,7 +78,7 @@ public class Keyboard {
       }
     }
 
-    if (scanCode == Key.CAPSLOCK) {
+    if (translatedCode == Key.CAPSLOCK) {
       if (caps) {
         caps = false;
       } else {
@@ -80,9 +87,9 @@ public class Keyboard {
     }
 
     if (
-      scanCode == Key.ALT_GR ||
-      scanCode == Key.LEFT_ALT ||
-      scanCode == Key.RIGHT_ALT
+      translatedCode == Key.ALT_GR ||
+      translatedCode == Key.LEFT_ALT ||
+      translatedCode == Key.RIGHT_ALT
     ) {
       if (alt) {
         alt = false;
