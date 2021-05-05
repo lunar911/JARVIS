@@ -6,7 +6,6 @@ public class Screen {
 
   private static final int VIDEOBUFFER = 2000;
 
-  private byte foregroundColor = Constants.GREY;
   private byte backgroundColor = Constants.BLACK;
   private Cursor cursor = new Cursor();
   private VidMem vidMem;
@@ -16,12 +15,7 @@ public class Screen {
   }
 
   public void setColor(int fg, int bg) {
-    if (fg <= Constants.GREY && fg >= Constants.BLACK) {
-      foregroundColor = (byte) fg;
-    }
-    if (bg <= Constants.GREY && bg >= Constants.BLACK) {
-      backgroundColor = (byte) bg;
-    }
+    backgroundColor = (byte) bg;
   }
 
   public void setCursor(int newX, int newY) {
@@ -29,26 +23,32 @@ public class Screen {
     cursor.setY(newY);
   }
 
+  public void setCursor(int newX, int newY, int color) {
+    cursor.setX(newX);
+    cursor.setY(newY);
+    cursor.setColor(color);
+  }
+
   public void print(char c) {
     vidMem.expl[cursor.getPos()].ascii = (byte) c;
-    vidMem.expl[cursor.getPos()].color = foregroundColor;
+    vidMem.expl[cursor.getPos()].color = cursor.getColor();
     cursor.moveNextPos();
   }
 
   public void nextTabStop() {
     cursor.nextTabStop();
   }
-  
 
   private static int vidPos = 0xB8000;
+
   public static void printStatic(char c) {
     MAGIC.wMem8(vidPos, (byte) c);
     MAGIC.wMem8(vidPos + 1, (byte) 0x07);
     vidPos += 2;
   }
+
   public static void printStatic(String s) {
-    for(int i = 0; i < s.length(); i++)
-    {
+    for (int i = 0; i < s.length(); i++) {
       printStatic(s.charAt(i));
     }
   }
@@ -71,16 +71,15 @@ public class Screen {
   public void printHex(int num) {
     long castedValue = (long) num;
     printHex(castedValue);
-
   }
 
   public void printHex(long num) {
     print("0x");
 
-    if(num < 0) num = num >>> 1;
+    if (num < 0) num = num >>> 1;
     if (num != 0) {
       int digitCount = Math.getHexDigitCount(num);
-      
+
       if (digitCount == 1) {
         print(Math.Int2HexChar(num));
       } else {
@@ -155,5 +154,49 @@ public class Screen {
       m.expl[i].ascii = (byte) ' ';
       m.expl[i].color = (byte) Constants.BLACK;
     }
+  }
+
+  public static void blueScreen() {
+    VidMem m = (VidMem) MAGIC.cast2Struct(0xB8000);
+
+    for (int i = 0; i < VIDEOBUFFER; i++) {
+      m.expl[i].ascii = (byte) ' ';
+      m.expl[i].color = (byte) (Constants.BLUE << 4);
+    }
+  }
+
+  public static void directPrintInt(
+    int value,
+    int base,
+    int x,
+    int y,
+    int col
+  ) {
+    Screen screen = new Screen();
+    screen.setCursor(x, y, col);
+
+    if (base == 10) screen.print(value); else if (base == 16) screen.printHex(
+      value
+    );
+  }
+
+  public static void directPrintInt(int value, int x, int y, int col) {
+    Screen screen = new Screen();
+    screen.setCursor(x, y, col);
+
+    screen.print(value);
+  }
+
+  public static void directPrintChar(char c, int x, int y, int col) {
+    Screen screen = new Screen();
+    screen.setCursor(x, y, col);
+
+    screen.print(c);
+  }
+
+  public static void directPrintString(String s, int x, int y, int col) {
+    Screen screen = new Screen();
+    screen.setCursor(x, y, col);
+    screen.print(s);
   }
 }

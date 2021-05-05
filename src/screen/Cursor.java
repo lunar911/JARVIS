@@ -4,6 +4,9 @@ public class Cursor {
 
   private int X = 0;
   private int Y = 0;
+
+  private byte color = Constants.GREY;
+
   private final int width = 80;
   private final int height = 25;
 
@@ -49,5 +52,13 @@ public class Cursor {
         moveNextPos();
       }
     }
+  }
+
+  public void setColor(int newColor) {
+    color = (byte) newColor;
+  }
+
+  public byte getColor() {
+    return color;
   }
 }
