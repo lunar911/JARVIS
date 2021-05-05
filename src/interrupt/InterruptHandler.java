@@ -1,8 +1,8 @@
 package interrupt;
 
 import helpers.*;
-import screen.*;
 import peripheral.Keyboard;
+import screen.Screen;
 
 public class InterruptHandler {
 
@@ -136,7 +136,7 @@ public class InterruptHandler {
 
   @SJC.Interrupt
   public static void breakpoint() {
-    Screen.printStatic("breakpoint");
+    Screen.blueScreen();
   }
 
   @SJC.Interrupt
@@ -178,6 +178,6 @@ public class InterruptHandler {
   @SJC.Interrupt
   public static void keyBoard() {
     Keyboard.processKeyEvent();
-    MAGIC.wIOs8(MASTER, (byte) 0x20);   
+    MAGIC.wIOs8(MASTER, (byte) 0x20);
   }
 }

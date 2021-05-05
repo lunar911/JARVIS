@@ -7,7 +7,6 @@ import peripheral.Keyboard;
 import rte.*;
 import screen.Screen;
 
-
 public class Kernel {
 
   public static void main() {
@@ -21,11 +20,11 @@ public class Kernel {
     PCIScan.scanPCIBus(screen);
     screen.println();
 
-
     while (true) {
       if (Keyboard.isNewKeyEvent()) {
         int key = Keyboard.getKey();
         if (isPrintable(key)) screen.print((char) key);
+        if (key == Key.ESCAPE) MAGIC.inline(0xCC);
       }
     }
   }
