@@ -136,7 +136,21 @@ public class InterruptHandler {
 
   @SJC.Interrupt
   public static void breakpoint() {
+    final int stackBegin = 0x9BFFC;
+    int ebp = 0;
+    int steps = 1;
+    MAGIC.inline(0x89, 0x6D);
+    MAGIC.inlineOffset(1, ebp); //mov [ebp+xx],ebp
+    int nextEBP = MAGIC.rMem32(ebp);
+
+    while (nextEBP > ebp && nextEBP < stackBegin) {
+      steps++;
+      nextEBP = MAGIC.rMem32(nextEBP);
+    }
+
     Screen.blueScreen();
+    Screen.directPrintString("EBP", 0, 0, 0x07);
+    Screen.directPrintInt(steps, 0, 1, 0x07);
   }
 
   @SJC.Interrupt
