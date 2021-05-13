@@ -2,30 +2,8 @@ package peripheral;
 
 public class Keybuffer {
 
-  private static int[] buffer = {
-    Key.NOKEY,
-    Key.NOKEY,
-    Key.NOKEY,
-    Key.NOKEY,
-    Key.NOKEY,
-    Key.NOKEY,
-    Key.NOKEY,
-    Key.NOKEY,
-    Key.NOKEY,
-    Key.NOKEY,
-    Key.NOKEY,
-    Key.NOKEY,
-    Key.NOKEY,
-    Key.NOKEY,
-    Key.NOKEY,
-    Key.NOKEY,
-    Key.NOKEY,
-    Key.NOKEY,
-    Key.NOKEY,
-    Key.NOKEY,
-  };
+  private static int[] buffer = new int[80];
   public static int cur = 0;
-  public static final int size = 10;
 
   public static void push(int newInt) {
     buffer[cur] = newInt;

@@ -115,4 +115,12 @@ public class Keyboard {
   public static int getKey() {
     return Keybuffer.pop();
   }
+
+  public static boolean isPrintable(int key) {
+    if (key > 31 && key < 127) {
+      return true;
+    } else {
+      return false;
+    }
+  }
 }

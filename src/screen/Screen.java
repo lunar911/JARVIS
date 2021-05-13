@@ -7,11 +7,12 @@ public class Screen {
   private static final int VIDEOBUFFER = 2000;
 
   private byte backgroundColor = Constants.BLACK;
-  private Cursor cursor = new Cursor();
+  private Cursor cursor;
   private VidMem vidMem;
 
   public Screen() {
     vidMem = (VidMem) MAGIC.cast2Struct(0xB8000);
+    cursor = new Cursor();
   }
 
   public void setColor(int fg, int bg) {
@@ -19,14 +20,16 @@ public class Screen {
   }
 
   public void setCursor(int newX, int newY) {
-    cursor.setX(newX);
-    cursor.setY(newY);
+    cursor.setPos(newX + newY * 80);
   }
 
   public void setCursor(int newX, int newY, int color) {
-    cursor.setX(newX);
-    cursor.setY(newY);
+    setCursor(newX, newY);
     cursor.setColor(color);
+  }
+
+  public int getCursorPos() {
+    return cursor.getPos();
   }
 
   public void print(char c) {
