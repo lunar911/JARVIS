@@ -9,7 +9,7 @@ import applications.*;
 public class Terminal {
     private final Screen screen;
     private String[] application;
-    private Wordbuffer wordbuffer;
+    private final Wordbuffer wordbuffer;
 
     public Terminal() {
         screen = new Screen();
@@ -20,10 +20,12 @@ public class Terminal {
     }
 
     private void setupApplications() {
-        application = new String[3];
+        application = new String[4];
         application[0] = "MemoryMap";
         application[1] = "PCIScan";
         application[2] = "cls";
+        application[3] = "moon";
+
     }
 
     public Screen getScreen() {
@@ -45,7 +47,7 @@ public class Terminal {
         screen.println("Invalid command. ");
         screen.print(command);
         screen.println();
-        screen.println("Available commands are: MemoryMap, PCIScan, cls");
+        screen.println("Available commands are: MemoryMap, PCIScan, cls, moon");
     }
 
     public void run() {
@@ -57,14 +59,15 @@ public class Terminal {
                     case Key.ENTER:
                         String command = wordbuffer.getWord();
                         screen.println();
-                        if(command.equals(application[0])) {
+                        if (command.equals(application[0])) {
                             MemoryMap.printMemLayout(screen);
                         } else if (command.equals(application[1])) {
                             PCIScan.scanPCIBus(screen);
                         } else if (command.equals(application[2])) {
                             Screen.clearScreen();
-                        }
-                        else {
+                        } else if (command.equals(application[3])) {
+                            Moon.draw(screen);
+                        } else {
                             printHelp(command);
                         }
                         break;
