@@ -18,7 +18,7 @@ public class DynamicRuntime {
             if (StaticMemoryMap.type == 1) {// Memory is free.
                 if (StaticMemoryMap.startAddress + StaticMemoryMap.size >= firstFreeAddress) {
                     int eO_address, eO_size;
-                    if(StaticMemoryMap.startAddress >= firstFreeAddress) { // Take memory segment from BIOS as is.
+                    if (StaticMemoryMap.startAddress >= firstFreeAddress) { // Take memory segment from BIOS as is.
                         eO_address = (int) StaticMemoryMap.startAddress;
                         eO_size = (int) StaticMemoryMap.size;
                     } else { // Shrink memory segment
@@ -62,32 +62,33 @@ public class DynamicRuntime {
         }
         scalarSize = (scalarSize + 3) & ~3; // Align to multiples of 4
 
+        int relocNewObject = relocEntries << 2;
+        int sizeRequired = scalarSize + relocNewObject + 16;
 
         //find next big enough EmptyObject
         EmptyObject eO = first_eO;
-        while ((eO._r_scalarSize - 8) < scalarSize) {
+        while ((eO._r_scalarSize - 8) < sizeRequired) {
             eO = eO.nextEmptyObject;
-            if(eO == null) {
+            if (eO == null) {
                 MAGIC.inline(0xCC);
             }
         }
 
-        int start = MAGIC.cast2Ref(eO) + eO._r_scalarSize - scalarSize; // Start of current new object
-        int rs = relocEntries << 2;
-        int freeAddress = start + rs + scalarSize; // offset for next new object
+        int startOfObject = MAGIC.cast2Ref(eO) + eO._r_scalarSize - scalarSize; // Start of current new object
+        int endOfObject = startOfObject + relocNewObject + scalarSize; // offset for next new object
 
-        for (int i = start; i < freeAddress; i += 4) {
+        for (int i = startOfObject; i < endOfObject; i += 4) {
             MAGIC.wMem32(i, 0); // init memory for object with 0
         }
 
-        Object newObj = MAGIC.cast2Obj(start);
+        Object newObj = MAGIC.cast2Obj(startOfObject + relocNewObject);
         MAGIC.assign(newObj._r_relocEntries, relocEntries);
         MAGIC.assign(newObj._r_scalarSize, scalarSize);
         MAGIC.assign(newObj._r_type, type);
 
         MAGIC.assign(newObj._r_next, eO._r_next);
 
-        MAGIC.assign(eO._r_scalarSize, eO._r_scalarSize - scalarSize); // shrink emptyObject by size of new object
+        MAGIC.assign(eO._r_scalarSize, eO._r_scalarSize - sizeRequired); // shrink emptyObject by size of new object
         return newObj;
     }
 

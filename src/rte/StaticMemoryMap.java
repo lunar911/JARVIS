@@ -11,9 +11,6 @@ public class StaticMemoryMap {
     private static final int buffer = 0x8000;
 
     public static boolean next() {
-        if (BIOS.regs.EAX != 0x534D4150 || BIOS.regs.EBX == 0) return false;
-        BIOS.regs.EBX = 0;
-
         BIOS.regs.EAX = 0x0000E820;
         BIOS.regs.EDX = 0x534D4150; // SMAP
 
@@ -23,10 +20,12 @@ public class StaticMemoryMap {
         BIOS.regs.ECX = 24;
 
         BIOS.rint(0x15);
+        if (BIOS.regs.EAX != 0x534D4150 || BIOS.regs.EBX == 0) return false;
 
         startAddress = MAGIC.rMem64(buffer);
         size = MAGIC.rMem64(buffer + 8) - startAddress;
         type = MAGIC.rMem32(buffer + 16);
+
         return true;
     }
 }
