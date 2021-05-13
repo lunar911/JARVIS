@@ -2,7 +2,7 @@ package peripheral;
 
 public class Keybuffer {
 
-  private static int[] buffer = new int[80];
+  private static int[] buffer = new int[10];
   public static int cur = 0;
 
   public static void push(int newInt) {

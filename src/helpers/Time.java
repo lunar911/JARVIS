@@ -1,3 +1,5 @@
+package helpers;
+
 public class Time {
     public static int now = 0;
 

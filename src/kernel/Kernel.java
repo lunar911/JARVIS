@@ -1,8 +1,8 @@
 package kernel;
 
-import applications.*;
 import interrupt.InterruptHandler;
 import screen.Screen;
+import terminal.Terminal;
 
 
 public class Kernel {

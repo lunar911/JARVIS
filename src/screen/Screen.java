@@ -19,6 +19,10 @@ public class Screen {
     backgroundColor = (byte) bg;
   }
 
+  public void setCursor(int pos) {
+    cursor.setPos(pos);
+  }
+
   public void setCursor(int newX, int newY) {
     cursor.setPos(newX + newY * 80);
   }

@@ -4,6 +4,11 @@ public class String {
     private char[] value;
     private int count;
 
+    public String(char[] chararray){
+        this.value = chararray;
+        this.count = chararray.length;
+    }
+
     @SJC.Inline
     public int length() {
         return count;
@@ -12,6 +17,16 @@ public class String {
     @SJC.Inline
     public char charAt(int i) {
         return value[i];
+    }
+
+    public boolean equals(String other) {
+        if (this.length() != other.length()) return false;
+
+        for(int i = 0; i < this.count; i++) {
+            if(value[i] != other.value[i])
+                return false;
+        }
+        return true;
     }
 
     public boolean startsWith(String s) {
