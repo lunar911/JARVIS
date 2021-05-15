@@ -45,8 +45,6 @@ public class Terminal {
 
     public void printHelp(String command) {
         screen.println("Invalid command. ");
-        screen.print(command);
-        screen.println();
         screen.println("Available commands are: MemoryMap, PCIScan, cls, moon");
     }
 
@@ -65,6 +63,7 @@ public class Terminal {
                             PCIScan.scanPCIBus(screen);
                         } else if (command.equals(application[2])) {
                             Screen.clearScreen();
+                            screen.setCursor(0);
                         } else if (command.equals(application[3])) {
                             Moon.draw(screen);
                         } else {
