@@ -5,14 +5,15 @@ import screen.Screen;
 import peripheral.Keyboard;
 import helpers.Time;
 import applications.*;
+import kernel.Task;
 
-public class Terminal {
+public class Terminal extends Task {
     private final Screen screen;
     private String[] application;
     private final Wordbuffer wordbuffer;
 
-    public Terminal() {
-        screen = new Screen();
+    public Terminal(Screen screen) {
+        this.screen = screen;
         Screen.clearScreen();
         setupApplications();
         wordbuffer = new Wordbuffer();

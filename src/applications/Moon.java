@@ -1,8 +1,10 @@
 package applications;
 
 import screen.Screen;
+import kernel.Task;
+import helpers.Time;
 
-public class Moon {
+public class Moon extends Task{
 
     public static void draw(Screen screen) {
         Screen.clearScreen();
@@ -27,5 +29,11 @@ public class Moon {
         screen.println("      *               aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
         screen.println("                         aaaaaaaaaaaaaaaaaaaaaaaa");
         screen.println("                      *      aaaaaaaaaaaaaaaa");
+        Time.wait(30);
+    }
+
+    public void run() {
+        Screen screen = new Screen();
+        draw(screen);
     }
 }
