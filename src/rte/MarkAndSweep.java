@@ -3,11 +3,11 @@ package rte;
 import applications.Objects;
 import helpers.Time;
 import kernel.Task;
+import peripheral.StaticV24;
 import screen.Screen;
 
 public class MarkAndSweep extends Task {
-    private Screen screen;
-    private Object marked = null;
+    private final Screen screen;
 
     public MarkAndSweep(Screen screen) {
         this.screen = screen;
@@ -25,23 +25,36 @@ public class MarkAndSweep extends Task {
     }
 
     public void mark() {
-        Object created_iter = DynamicRuntime.first_O;
-        while (created_iter._r_next != null) {
-            int iter_adr = MAGIC.cast2Ref(created_iter);
-            int firstObjAdr = MAGIC.rMem32(MAGIC.imageBase + 16);
-
-            Object rootSetElement = MAGIC.cast2Obj(firstObjAdr);
-
-            while(rootSetElement._r_next != null) {
-                int adr = MAGIC.cast2Ref(rootSetElement);
-                if(adr == iter_adr) {
-
-                }
+        Object createdIter = DynamicRuntime.first_O;
+        while (createdIter._r_next != null) {
+            if(reachableByRootset(createdIter)) {
+                break;
+            } else {
+                StaticV24.println("Marked object.");
+                MAGIC.assign(createdIter.delete, true);
             }
+            createdIter = createdIter._r_next;
         }
     }
 
     public void sweep() {
 
+    }
+
+    public boolean reachableByRootset(Object obj) {
+        boolean ret = false;
+        int firstObjAdr = MAGIC.rMem32(MAGIC.imageBase + 16);
+        Object rootSetElement = MAGIC.cast2Obj(firstObjAdr);
+
+        while (rootSetElement._r_next != null) {
+            int adr = MAGIC.cast2Ref(rootSetElement);
+            int createdAddr = MAGIC.cast2Ref(obj);
+            if(adr == createdAddr) {
+                ret = true;
+                break;
+            }
+            rootSetElement = rootSetElement._r_next;
+        }
+        return ret;
     }
 }
