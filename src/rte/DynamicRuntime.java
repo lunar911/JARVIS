@@ -5,14 +5,15 @@ import bios.BIOS;
 
 public class DynamicRuntime {
 
-    private static int firstFreeAddress = 0;
+    public static Object first_O = null;
+    private static Object last_O = null;
     private static EmptyObject first_eO = null;
 
     public static void InitEmptyObjects() {
         BIOS.regs.EBX = 0;
 
         int imageSize = MAGIC.rMem32(MAGIC.imageBase + 4);
-        firstFreeAddress = (MAGIC.imageBase + imageSize + 0xFFF) & ~0xFFF;
+        int firstFreeAddress = (MAGIC.imageBase + imageSize + 0xFFF) & ~0xFFF;
 
         while (StaticMemoryMap.next()) {
             if (StaticMemoryMap.type == 1) {// Memory is free.
@@ -86,10 +87,43 @@ public class DynamicRuntime {
         MAGIC.assign(newObj._r_scalarSize, scalarSize);
         MAGIC.assign(newObj._r_type, type);
 
+        if(first_O == null){
+            first_O = newObj;
+            last_O = newObj;
+        }
+
+        MAGIC.assign(last_O._r_next, newObj);
+        last_O = newObj;
         MAGIC.assign(newObj._r_next, eO._r_next);
 
         MAGIC.assign(eO._r_scalarSize, eO._r_scalarSize - sizeRequired); // shrink emptyObject by size of new object
         return newObj;
+    }
+
+    public static int countObjects() {
+        int count = 1;
+        if(first_O != null) {
+            Object iter = first_O;
+
+            while (iter._r_next != null) {
+                count++;
+                iter = iter._r_next;
+            }
+        }
+        return count;
+    }
+
+    public static int countEmptyObjects() {
+        int count = 1;
+        if(first_eO != null) {
+            EmptyObject iter = first_eO;
+
+            while (iter.nextEmptyObject != null) {
+                count++;
+                iter = iter.nextEmptyObject;
+            }
+        }
+        return count;
     }
 
     public static SArray newArray(int length, int arrDim, int entrySize, int stdType,

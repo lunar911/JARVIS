@@ -12,6 +12,12 @@ public class Screen {
 
   public Screen() {
     vidMem = (VidMem) MAGIC.cast2Struct(0xB8000);
+
+    for(int i = 0; i < VIDEOBUFFER; i++) {
+      vidMem.expl[i].ascii = (byte) ' ';
+      vidMem.expl[i].color = Constants.GREY;
+    }
+
     cursor = new Cursor();
   }
 
@@ -34,6 +40,11 @@ public class Screen {
 
   public int getCursorPos() {
     return cursor.getPos();
+  }
+
+  public void printStationary(char c) {
+    vidMem.expl[cursor.getPos()].ascii = (byte) c;
+    vidMem.expl[cursor.getPos()].color = cursor.getColor();
   }
 
   public void print(char c) {

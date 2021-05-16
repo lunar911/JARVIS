@@ -14,6 +14,7 @@ public class Cursor {
         X = 0;
         Y = 0;
         color = Constants.GREY;
+        writeCursor(0x0A, 0x01);
     }
 
     public void setX(int newX) {
@@ -33,6 +34,9 @@ public class Cursor {
 
         setX(pos % width);
         setY(pos / width);
+
+        writeCursor(0x0F, pos);
+        writeCursor(0x0E, pos >>> 8);
     }
 
     public int getPos() {
@@ -66,5 +70,11 @@ public class Cursor {
 
     public byte getColor() {
         return color;
+    }
+
+    @SJC.Inline
+    private void writeCursor(int b1, int b2) {
+        MAGIC.wIOs8(0x03D4, (byte) b1);
+        MAGIC.wIOs8(0x03D5, (byte) b2);
     }
 }

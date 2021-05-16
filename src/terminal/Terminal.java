@@ -21,12 +21,12 @@ public class Terminal extends Task {
     }
 
     private void setupApplications() {
-        application = new String[4];
+        application = new String[5];
         application[0] = "MemoryMap";
         application[1] = "PCIScan";
         application[2] = "cls";
         application[3] = "moon";
-
+        application[4] = "obj";
     }
 
     public Screen getScreen() {
@@ -46,7 +46,7 @@ public class Terminal extends Task {
 
     public void printHelp(String command) {
         screen.println("Invalid command. ");
-        screen.println("Available commands are: MemoryMap, PCIScan, cls, moon");
+        screen.println("Available commands are: MemoryMap, PCIScan, cls, moon, obj");
     }
 
     public void run() {
@@ -67,6 +67,8 @@ public class Terminal extends Task {
                             screen.setCursor(0);
                         } else if (command.equals(application[3])) {
                             Moon.draw(screen);
+                        } else if (command.equals(application[4])) {
+                                Objects.printObjectCounts(screen);
                         } else {
                             printHelp(command);
                         }
