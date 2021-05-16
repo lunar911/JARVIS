@@ -23,7 +23,7 @@ public class StaticMemoryMap {
         if (BIOS.regs.EAX != 0x534D4150 || BIOS.regs.EBX == 0) return false;
 
         startAddress = MAGIC.rMem64(buffer);
-        size = MAGIC.rMem64(buffer + 8) - startAddress;
+        size = MAGIC.rMem64(buffer + 8);
         type = MAGIC.rMem32(buffer + 16);
 
         return true;
