@@ -163,7 +163,8 @@ public class InterruptHandler {
       
       nextEBP = MAGIC.rMem32(nextEBP);
       count++;
-    } 
+    }
+    while(true);
   }
 
   @SJC.Interrupt

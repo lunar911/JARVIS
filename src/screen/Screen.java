@@ -13,11 +13,6 @@ public class Screen {
   public Screen() {
     vidMem = (VidMem) MAGIC.cast2Struct(0xB8000);
 
-    for(int i = 0; i < VIDEOBUFFER; i++) {
-      vidMem.expl[i].ascii = (byte) ' ';
-      vidMem.expl[i].color = Constants.GREY;
-    }
-
     cursor = new Cursor();
   }
 
