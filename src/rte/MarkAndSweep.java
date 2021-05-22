@@ -21,7 +21,7 @@ public class MarkAndSweep extends Task {
         screen.println("Sweeping Objects...");
         sweep();
         Objects.printObjectCounts(screen);
-        Time.wait(200);
+        Time.wait(20);
     }
 
     public void mark() {
@@ -38,7 +38,14 @@ public class MarkAndSweep extends Task {
     }
 
     public void sweep() {
-
+        Object current = DynamicRuntime.first_O;
+        while(current._r_next != null) {
+            if(current.delete) {
+                DynamicRuntime.deleteObject(current);
+            }
+            StaticV24.println(MAGIC.addr(current));
+            current = current._r_next;
+        }
     }
 
     public boolean reachableByRootset(Object obj) {

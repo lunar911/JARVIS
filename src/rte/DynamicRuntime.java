@@ -1,7 +1,7 @@
 package rte;
 
-import screen.Screen;
 import bios.BIOS;
+import peripheral.StaticV24;
 
 public class DynamicRuntime {
 
@@ -39,6 +39,8 @@ public class DynamicRuntime {
 
                     if (first_eO == null) {
                         first_eO = (EmptyObject) eO;
+                        MAGIC.assign(first_eO._r_next, null);
+                        first_eO.nextEmptyObject = null;
                     } else {
                         EmptyObject iter = first_eO;
                         // get last EmptyObject
@@ -87,14 +89,14 @@ public class DynamicRuntime {
         MAGIC.assign(newObj._r_scalarSize, scalarSize);
         MAGIC.assign(newObj._r_type, type);
 
-        if(first_O == null){
+        if (first_O == null) {
             first_O = newObj;
             last_O = newObj;
         }
 
         MAGIC.assign(last_O._r_next, newObj);
         last_O = newObj;
-        MAGIC.assign(newObj._r_next, eO._r_next);
+        MAGIC.assign(newObj._r_next, (Object) eO);
 
         MAGIC.assign(eO._r_scalarSize, eO._r_scalarSize - sizeRequired); // shrink emptyObject by size of new object
         return newObj;
@@ -102,7 +104,7 @@ public class DynamicRuntime {
 
     public static int countObjects() {
         int count = 1;
-        if(first_O != null) {
+        if (first_O != null) {
             Object iter = first_O;
 
             while (iter._r_next != null) {
@@ -115,7 +117,7 @@ public class DynamicRuntime {
 
     public static int countEmptyObjects() {
         int count = 1;
-        if(first_eO != null) {
+        if (first_eO != null) {
             EmptyObject iter = first_eO;
 
             while (iter.nextEmptyObject != null) {
@@ -124,6 +126,58 @@ public class DynamicRuntime {
             }
         }
         return count;
+    }
+
+    public static EmptyObject getLastEmptyObject() {
+        EmptyObject ret = first_eO;
+        while (ret.nextEmptyObject != null) {
+            ret = ret.nextEmptyObject;
+        }
+        return ret;
+    }
+
+    public static void deleteObject(Object del) {
+        StaticV24.println("Delete Start.");
+
+        int objBaseAddr = MAGIC.cast2Ref(del);
+        objBaseAddr -= del._r_relocEntries * MAGIC.ptrSize;
+        int eObjAddr = objBaseAddr + MAGIC.getInstRelocEntries("EmptyObject") * MAGIC.ptrSize;
+        int freeMem = del._r_relocEntries * MAGIC.ptrSize + del._r_scalarSize;
+
+        // get previous object
+        Object prevObject = first_O;
+        while (prevObject._r_next != null) {
+            if(prevObject._r_next == del) break;
+            prevObject = prevObject._r_next;
+        }
+        Object next = del._r_next;
+
+        //null memory
+        for (int i = objBaseAddr; i < eObjAddr + MAGIC.getInstScalarSize("EmptyObject"); i++) {
+            MAGIC.wMem8(i, (byte) 0);
+        }
+
+        Object eObj = MAGIC.cast2Obj(eObjAddr);
+        MAGIC.assign(eObj._r_type, MAGIC.clssDesc("EmptyObject"));
+        MAGIC.assign(eObj._r_relocEntries, MAGIC.getInstRelocEntries("EmptyObject"));
+        MAGIC.assign(eObj._r_scalarSize, freeMem - MAGIC.getInstRelocEntries("EmptyObject") * MAGIC.ptrSize);
+
+
+        EmptyObject last = getLastEmptyObject();
+        last.nextEmptyObject = (EmptyObject) eObj;
+
+        if (prevObject != null) {
+            MAGIC.assign(prevObject._r_next, eObj);
+        } else {
+            first_O = eObj;
+        }
+
+        if (next != null) {
+            MAGIC.assign(eObj._r_next, next);
+        } else {
+            Object nullObject = null;
+            MAGIC.assign(eObj._r_next, nullObject);
+        }
     }
 
     public static SArray newArray(int length, int arrDim, int entrySize, int stdType,
