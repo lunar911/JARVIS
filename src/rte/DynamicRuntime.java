@@ -5,8 +5,11 @@ import peripheral.StaticV24;
 
 public class DynamicRuntime {
 
+    public static int ObjectCount = 0;
     public static Object first_O = null;
-    private static Object last_O = null;
+    public static Object last_O_rootset = null;
+    private static Object latest_O = null;
+
     private static EmptyObject first_eO = null;
 
     public static void InitEmptyObjects() {
@@ -33,13 +36,14 @@ public class DynamicRuntime {
                     }
 
                     Object eO = MAGIC.cast2Obj(eO_address);
-                    MAGIC.assign(eO._r_relocEntries, 3);
+                    MAGIC.assign(eO._r_relocEntries, MAGIC.getInstRelocEntries("EmptyObject"));
                     MAGIC.assign(eO._r_type, MAGIC.clssDesc("EmptyObject"));
                     MAGIC.assign(eO._r_scalarSize, eO_size);
 
                     if (first_eO == null) {
                         first_eO = (EmptyObject) eO;
-                        MAGIC.assign(first_eO._r_next, null);
+                        Object nullObject = null;
+                        MAGIC.assign(first_eO._r_next, nullObject);
                         first_eO.nextEmptyObject = null;
                     } else {
                         EmptyObject iter = first_eO;
@@ -90,12 +94,16 @@ public class DynamicRuntime {
         MAGIC.assign(newObj._r_type, type);
 
         if (first_O == null) {
-            first_O = newObj;
-            last_O = newObj;
+            first_O = MAGIC.cast2Obj(MAGIC.rMem32(MAGIC.imageBase + 16));
+
+            last_O_rootset = first_O;
+            while(last_O_rootset._r_next != null) last_O_rootset = last_O_rootset._r_next;
+
+            latest_O = last_O_rootset;
         }
 
-        MAGIC.assign(last_O._r_next, newObj);
-        last_O = newObj;
+        MAGIC.assign(latest_O._r_next, newObj);
+        latest_O = newObj;
         MAGIC.assign(newObj._r_next, (Object) eO);
 
         MAGIC.assign(eO._r_scalarSize, eO._r_scalarSize - sizeRequired); // shrink emptyObject by size of new object
@@ -103,16 +111,34 @@ public class DynamicRuntime {
     }
 
     public static int countObjects() {
-        int count = 1;
-        if (first_O != null) {
-            Object iter = first_O;
+        ObjectCount = 0;
 
-            while (iter._r_next != null) {
-                count++;
-                iter = iter._r_next;
+        // mark all Objects
+        if (first_O != null) {
+            Object createdIter = first_O;
+
+            while (createdIter._r_next != null) {
+                createdIter.mark(true);
+                createdIter = createdIter._r_next;
             }
         }
-        return count;
+
+        // save return value
+        int ret = ObjectCount;
+
+        // cleanup mark
+        if (first_O != null) {
+            Object createdIter = first_O;
+
+            while (createdIter._r_next != null) {
+                createdIter.mark(false);
+                createdIter = createdIter._r_next;
+            }
+        }
+
+        ObjectCount = 0;
+
+        return ret;
     }
 
     public static int countEmptyObjects() {
@@ -138,14 +164,14 @@ public class DynamicRuntime {
 
     public static void deleteObject(Object del) {
         StaticV24.println("Delete Start.");
-
         int objBaseAddr = MAGIC.cast2Ref(del);
         objBaseAddr -= del._r_relocEntries * MAGIC.ptrSize;
         int eObjAddr = objBaseAddr + MAGIC.getInstRelocEntries("EmptyObject") * MAGIC.ptrSize;
         int freeMem = del._r_relocEntries * MAGIC.ptrSize + del._r_scalarSize;
 
+
         // get previous object
-        Object prevObject = first_O;
+        Object prevObject = last_O_rootset;
         while (prevObject._r_next != null) {
             if(prevObject._r_next == del) break;
             prevObject = prevObject._r_next;
@@ -157,6 +183,8 @@ public class DynamicRuntime {
             MAGIC.wMem8(i, (byte) 0);
         }
 
+
+
         Object eObj = MAGIC.cast2Obj(eObjAddr);
         MAGIC.assign(eObj._r_type, MAGIC.clssDesc("EmptyObject"));
         MAGIC.assign(eObj._r_relocEntries, MAGIC.getInstRelocEntries("EmptyObject"));
@@ -166,18 +194,13 @@ public class DynamicRuntime {
         EmptyObject last = getLastEmptyObject();
         last.nextEmptyObject = (EmptyObject) eObj;
 
+
         if (prevObject != null) {
-            MAGIC.assign(prevObject._r_next, eObj);
-        } else {
-            first_O = eObj;
+            MAGIC.assign(prevObject._r_next, next);
         }
 
-        if (next != null) {
-            MAGIC.assign(eObj._r_next, next);
-        } else {
-            Object nullObject = null;
-            MAGIC.assign(eObj._r_next, nullObject);
-        }
+        Object nullObject = null;
+        MAGIC.assign(eObj._r_next, nullObject);
     }
 
     public static SArray newArray(int length, int arrDim, int entrySize, int stdType,
@@ -293,6 +316,7 @@ public class DynamicRuntime {
     }
 
     public static void nullException() {
+        StaticV24.println("NULLPOINTER");
         MAGIC.inline(0xCC);
     }
 }

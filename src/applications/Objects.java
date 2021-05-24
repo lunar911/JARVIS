@@ -19,7 +19,7 @@ public class Objects {
         int firstObjAdr = MAGIC.rMem32(MAGIC.imageBase + 16);
 
         Object first = MAGIC.cast2Obj(firstObjAdr);
-        int count = 1;
+        int count = 0;
         while(first._r_next != null) {
             first = first._r_next;
             count++;

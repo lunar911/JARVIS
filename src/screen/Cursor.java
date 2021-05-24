@@ -33,8 +33,11 @@ public class Cursor {
         if (pos < 0 || pos >= 2000) pos = 0;
 
         setX(pos % width);
-        setY(pos / width);
-
+        if (pos != 0) {
+            setY(pos / width);
+        } else {
+            setY(0);
+        }
         writeCursor(0x0F, pos);
         writeCursor(0x0E, pos >>> 8);
     }

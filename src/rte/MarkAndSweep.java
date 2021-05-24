@@ -17,51 +17,37 @@ public class MarkAndSweep extends Task {
     public void run() {
         Objects.printObjectCounts(screen);
         screen.println("Marking Objects...");
-        mark();
+        mark(true);
         screen.println("Sweeping Objects...");
         sweep();
+        screen.println("Sweeping Objects...");
+
+        mark(false);
         Objects.printObjectCounts(screen);
-        Time.wait(20);
     }
 
-    public void mark() {
+    public void mark(boolean mark) {
         Object createdIter = DynamicRuntime.first_O;
         while (createdIter._r_next != null) {
-            if(reachableByRootset(createdIter)) {
-                break;
-            } else {
-                StaticV24.println("Marked object.");
-                MAGIC.assign(createdIter.delete, true);
-            }
+            createdIter.mark(mark);
             createdIter = createdIter._r_next;
         }
     }
 
+    static int i = 0;
     public void sweep() {
-        Object current = DynamicRuntime.first_O;
-        while(current._r_next != null) {
-            if(current.delete) {
+        Object current = DynamicRuntime.last_O_rootset;
+        Object next = current._r_next;
+
+        while (current._r_next != null) {
+            next = current._r_next;
+            if (current.mark) {
+                i++;
                 DynamicRuntime.deleteObject(current);
             }
-            StaticV24.println(MAGIC.addr(current));
-            current = current._r_next;
-        }
-    }
 
-    public boolean reachableByRootset(Object obj) {
-        boolean ret = false;
-        int firstObjAdr = MAGIC.rMem32(MAGIC.imageBase + 16);
-        Object rootSetElement = MAGIC.cast2Obj(firstObjAdr);
+            current = next;
 
-        while (rootSetElement._r_next != null) {
-            int adr = MAGIC.cast2Ref(rootSetElement);
-            int createdAddr = MAGIC.cast2Ref(obj);
-            if(adr == createdAddr) {
-                ret = true;
-                break;
-            }
-            rootSetElement = rootSetElement._r_next;
         }
-        return ret;
     }
 }
