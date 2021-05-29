@@ -12,13 +12,13 @@ public class Scheduler {
     private final int taskcount;
 
     public Scheduler() {
-        taskcount = 4;
+        taskcount = 3;
         Screen screen = new Screen();
         tasks = new Task[taskcount];
         tasks[0] = new Terminal(screen);
         tasks[1] = new Moon();
         tasks[2] = new Editor(screen);
-        tasks[3] = new MarkAndSweep(screen);
+        //tasks[3] = new MarkAndSweep(screen);
     }
 
     public void loop() {

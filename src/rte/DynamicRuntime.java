@@ -16,7 +16,8 @@ public class DynamicRuntime {
         BIOS.regs.EBX = 0;
 
         int imageSize = MAGIC.rMem32(MAGIC.imageBase + 4);
-        int firstFreeAddress = (MAGIC.imageBase + imageSize + 0xFFF) & ~0xFFF;
+        int pagingSize = (1024*1024*4)+4096;
+        int firstFreeAddress = (MAGIC.imageBase + imageSize + pagingSize + 0xFFF) & ~0xFFF;
 
         while (StaticMemoryMap.next()) {
             if (StaticMemoryMap.type == 1) {// Memory is free.
@@ -27,7 +28,7 @@ public class DynamicRuntime {
                         eO_size = (int) StaticMemoryMap.size;
                     } else { // Shrink memory segment
                         eO_address = (int) firstFreeAddress;
-                        eO_size = (int) StaticMemoryMap.size - (firstFreeAddress - eO_address);
+                        eO_size = (int) StaticMemoryMap.size - (firstFreeAddress - (int) StaticMemoryMap.startAddress);
                     }
 
                     // erase data at empty object area
@@ -77,6 +78,7 @@ public class DynamicRuntime {
         while ((eO._r_scalarSize - 8) < sizeRequired) {
             eO = eO.nextEmptyObject;
             if (eO == null) {
+                StaticV24.println("Here?");
                 MAGIC.inline(0xCC);
             }
         }
