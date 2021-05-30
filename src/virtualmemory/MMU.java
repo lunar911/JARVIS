@@ -28,8 +28,8 @@ public class MMU {
                 pageCounter++;
             }
         }
-        //modify last and first page
-        PageTable firstTable = (PageTable) MAGIC.cast2Struct(pageTableStart + 1024 * 4);
+        //modify last and first page to trigger pageFault
+        PageTable firstTable = (PageTable) MAGIC.cast2Struct(pageTableStart);
         firstTable.pages[0] = 0;
 
 
@@ -62,7 +62,7 @@ public class MMU {
         MAGIC.inline(0x0F, 0x22, 0xC0); //mov cr0,eax
     }
 
-    public int getCR2() {
+    public static int getCR2() {
         int cr2 = 0;
         MAGIC.inline(0x0F, 0x20, 0xD0); //mov e/rax,cr2
         MAGIC.inline(0x89, 0x45);
