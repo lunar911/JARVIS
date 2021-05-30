@@ -3,6 +3,7 @@ package kernel;
 import applications.Editor;
 import applications.Moon;
 import rte.MarkAndSweep;
+import applications.PageFault;
 import screen.Screen;
 import terminal.Terminal;
 
@@ -12,12 +13,13 @@ public class Scheduler {
     private final int taskcount;
 
     public Scheduler() {
-        taskcount = 3;
+        taskcount = 4;
         Screen screen = new Screen();
         tasks = new Task[taskcount];
         tasks[0] = new Terminal(screen);
         tasks[1] = new Moon();
         tasks[2] = new Editor(screen);
+        tasks[3] = new PageFault();
         //tasks[3] = new MarkAndSweep(screen);
     }
 
