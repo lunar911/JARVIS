@@ -193,8 +193,10 @@ public class InterruptHandler {
   }
 
   @SJC.Interrupt
-  public static void pageFault() {
-    Screen.printStatic("PageFault");
+  public static void pageFault(int errorCode) {
+    Screen.printStatic("PageFault on Page: ");
+    Screen.directPrintInt(errorCode, 16, 8, 0x07);
+    while(true);
   }
 
   @SJC.Interrupt
