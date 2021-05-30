@@ -143,29 +143,7 @@ public class InterruptHandler {
         MAGIC.inline(0x89, 0x6D);
         MAGIC.inlineOffset(1, ebp); //mov [ebp+xx],ebp
 
-        Screen.blueScreen();
-
-        Screen.directPrintString("EBP", 0, 0, 0x07);
-        Screen.directPrintInt(ebp, 16, 0, 1, 0x07);
-
-        int eip = MAGIC.rMem32(ebp + 4);
-        Screen.directPrintString("EIP", 8, 0, 0x07);
-        Screen.directPrintInt(eip, 16, 8, 1, 0x07);
-
-        final int stackBegin = 0x9BFFC;
-
-        int count = 1;
-        int nextEBP = ebp;
-        while (nextEBP < stackBegin && nextEBP > 0) {
-            int nextEIP = MAGIC.rMem32(nextEBP + 4);
-
-            Screen.directPrintInt(nextEBP, 16, 0, count, 0x07);
-            Screen.directPrintInt(nextEIP, 16, 8, count, 0x07);
-
-            nextEBP = MAGIC.rMem32(nextEBP);
-            count++;
-        }
-        while (true) ;
+        Bluescreen.createBlueScreen(ebp);
     }
 
     @SJC.Interrupt

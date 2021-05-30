@@ -1,8 +1,6 @@
 package kernel;
 
 import interrupt.InterruptHandler;
-import peripheral.StaticV24;
-import rte.DynamicRuntime;
 import virtualmemory.MMU;
 
 

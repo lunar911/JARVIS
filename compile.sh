@@ -1,1 +1,1 @@
-./compile src -t ia32 -T nsop -n -o boot && qemu-system-x86_64 -m 32 -boot a -serial stdio -fda BOOT_FLP.IMG
+./compile src -t ia32 -T nsop -u rte -n -o boot && qemu-system-x86_64 -m 32 -boot a -serial stdio -fda BOOT_FLP.IMG
