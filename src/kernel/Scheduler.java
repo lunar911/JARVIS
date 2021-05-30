@@ -24,7 +24,6 @@ public class Scheduler {
     }
 
     public void loop() {
-        MAGIC.inline(0xCC);
 
         while (true) {
             for (int i = 0; i < taskcount; i++) {

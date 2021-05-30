@@ -27,80 +27,82 @@ public class Bluescreen {
 
             Screen.directPrintInt(nextEBP, 16, 0, count, 0x07);
             Screen.directPrintInt(nextEIP, 16, 8, count, 0x07);
-            String method = getMethodName(eip);
-            StaticV24.println(method);
-            //Screen.directPrintString(method, 20, count, 0x07);
-            while(true);
+            SMthdBlock methodBlock = getMethodName(eip);
+
+            if(methodBlock == null) {
+                Screen.directPrintString("no Method found.", 20, count, 0x07);
+            } else {
+                Screen.directPrintString(methodBlock.namePar, 20, count, 0x07);
+            }
+
             nextEBP = MAGIC.rMem32(nextEBP);
             count++;
         }
         while (true) ;
     }
-
-    private static String getMethodName(int eip) {
-        String p = loopPackages(eip, SPackage.root);
-        if (p != null) {
-            StaticV24.println(p);
-        } else {
-            StaticV24.println("oooooooooowtf");
-        }
-
-        return p;
+    public static SMthdBlock getMethodName(int eip) { ;
+        return loopPackages(eip, SPackage.root);
     }
 
+    private static SMthdBlock loopPackages(int eip, SPackage p) {
+        SMthdBlock method = null;
 
-    private static String loopPackages(int eip, SPackage p) {
-        String className = loopClasses(eip, p.units);
-        StaticV24.println(p.name);
-        if (className != null) {
-            StaticV24.println(className);
-            return p.name;
+        while(p != null) {
+            StaticV24.println(p.name);
+            method = loopClasses(eip, p.units);
+            if(method != null)
+                break;
+
+            method = loopPackages(eip, p.subPacks);
+            if(method != null)
+                break;
+
+            p = p.nextPack;
         }
 
-        if (p.subPacks != null) {
-            className = loopPackages(eip, p.subPacks);
-            if (className != null) {
-                StaticV24.println(className);
-                return p.name;
-            }
-        }
-
-        if (p.nextPack != null)
-            return loopPackages(eip, p.nextPack);
-        return null;
+        return method;
     }
 
-    private static String loopClasses(int eip, SClassDesc c) {
-        while (c != null) {
-            StaticV24.print('-');
+    private static SMthdBlock loopClasses(int eip, SClassDesc c) {
+        SMthdBlock method = null;
+        while(c != null) {
+            StaticV24.print("/");
             StaticV24.println(c.name);
-            String mthd = loopMethods(eip, c.mthds);
-            if (mthd != null) {
-                StaticV24.println(mthd);
-                return c.name;
-            }
+            method = loopMethods(eip, c.mthds);
+            if(method != null)
+                break;
 
             c = c.nextUnit;
         }
 
-        return null;
+        return method;
     }
 
-    private static String loopMethods(int eip, SMthdBlock m) {
-        while (m != null) {
-            //StaticV24.print("--");
-            //StaticV24.println(m.namePar);
-            if (inRange(eip, m))
-                return m.namePar;
+    private static SMthdBlock loopMethods(int eip, SMthdBlock m) {
+        while(m != null) {
+            StaticV24.print("/-/");
+            StaticV24.print(m.namePar);
+            for(int i = m.namePar.length(); i < 60; i++)
+                StaticV24.print(' ');
+            if(inRange(eip, m))
+                break;
             m = m.nextMthd;
         }
 
-        return null;
+        return m;
     }
 
     private static boolean inRange(int eip, SMthdBlock m) {
         int start = MAGIC.cast2Ref(m);
         int end = start + m._r_scalarSize;
-        return (start <= eip) && (eip < end);
+        StaticV24.print("0x");
+        StaticV24.printHex(start,8);
+        StaticV24.print(" <= 0x");
+        StaticV24.printHex(eip, 8);
+        StaticV24.print(" < 0x");
+        StaticV24.printHex(end, 8);
+        StaticV24.print(" = ");
+        StaticV24.println((start <= eip && eip < end) ? "true\n\n\n\n\n\n" : "f");
+        return start <= eip && eip < end;
     }
 }

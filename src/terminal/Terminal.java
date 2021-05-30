@@ -91,5 +91,7 @@ public class Terminal extends Task {
                 }
             }
         }
+        MAGIC.inline(0xCC);
+
     }
 }
