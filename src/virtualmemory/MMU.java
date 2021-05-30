@@ -42,7 +42,7 @@ public class MMU {
     }
 
     public int align4kBAddress(int address) {
-        return address + 4096 & ~4096; // align to 4kB.
+        return address + 4095 & ~4095; // align to 4kB.
     }
 
 
