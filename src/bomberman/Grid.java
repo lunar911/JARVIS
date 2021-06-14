@@ -10,17 +10,34 @@ public class Grid {
         chunks = new Chunk[160];
         for (int i = 0; i < chunks.length; i++) {
             int pos = (i * chunkSize) % (chunksPerRow * chunkSize) + (i / 16 * pxInRow);
-
-            /*
-            StaticV24.print(i);
-            StaticV24.print(" ");
-            StaticV24.print(pxInRow);
-            StaticV24.print(" ");
-            StaticV24.println(pos);
-            */
-
-            chunks[i] = new Chunk(pos, Color.GREEN);
+            chunks[i] = new Chunk(pos, Color.GREEN, true);
         }
+
+        setSpecialFields();
+    }
+
+    public void setSpecialFields() {
+        // set all unwalkable fields
+        // top row
+        for (int i = 0; i < 16; i++) {
+            chunks[i].setWalkable(false);
+            chunks[i].setColor(Color.BLACK);
+        }
+
+        // left column
+        for (int i = 0; i < 160; i += 16) {
+            chunks[i].setWalkable(false);
+            chunks[i].setColor(Color.BLACK);
+        }
+
+        // in between
+        for (int i = 34; i < 143; i++) {
+            if ( i % 2 == 0 && i / 16 % 2 == 0 ) {
+                chunks[i].setWalkable(false);
+                chunks[i].setColor(Color.BLACK);
+            }
+        }
+
     }
 
     public void resetChunk(int pos) {
@@ -33,7 +50,11 @@ public class Grid {
     }
 
     public void setBomb(int pos) {
-        byte BOMBCOLOR = Color.BLACK;
+        byte BOMBCOLOR = Color.GRAY;
         chunks[pos].setColor(BOMBCOLOR);
+    }
+
+    public boolean isWalkable(int pos) {
+        return chunks[pos].isWalkable();
     }
 }

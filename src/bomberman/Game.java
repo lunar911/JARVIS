@@ -3,7 +3,7 @@ package bomberman;
 import bios.BIOS;
 import helpers.Time;
 import peripheral.Key;
-import peripheral.StaticV24;
+
 
 public class Game {
     private final Grid grid;
@@ -14,7 +14,6 @@ public class Game {
     public Game() {
         BIOS.enterGraphicmode();
         grid = new Grid();
-        grid.setPlayer(0);
         keyController = new KeyController();
         player = new Player(grid);
     }
