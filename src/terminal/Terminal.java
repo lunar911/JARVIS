@@ -68,7 +68,7 @@ public class Terminal extends Task {
                         } else if (command.equals(application[3])) {
                             Moon.draw(screen);
                         } else if (command.equals(application[4])) {
-                                Objects.printObjectCounts(screen);
+                            Objects.printObjectCounts(screen);
                         } else {
                             printHelp(command);
                         }
@@ -91,7 +91,5 @@ public class Terminal extends Task {
                 }
             }
         }
-        MAGIC.inline(0xCC);
-
     }
 }

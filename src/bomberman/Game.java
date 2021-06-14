@@ -1,33 +1,44 @@
 package bomberman;
 
 import bios.BIOS;
+import helpers.Time;
+import peripheral.Key;
 import peripheral.StaticV24;
 
 public class Game {
-    private static final int chunkSize = 20;
-    private static final int chunksPerRow = 320 / chunkSize;
-    private static final int pxInRow = chunkSize * chunkSize * 16;
-    private Chunk[] chunks;
+    private final Grid grid;
+    private final KeyController keyController;
+    private final Player player;
+    private static final int looptime = 3; // ~ 0,5 second
 
     public Game() {
-        chunks = new Chunk[160];
-
         BIOS.enterGraphicmode();
-        for(int i = 0; i < chunks.length; i++){
-            byte color = i % 2 == 0 ? (byte) 1 : (byte) 2;
-            int pos = (i * chunkSize) % (chunksPerRow * chunkSize) + (i / 16 * pxInRow);
+        grid = new Grid();
+        grid.setPlayer(0);
+        keyController = new KeyController();
+        player = new Player();
 
-            /*
-            StaticV24.print(i);
-            StaticV24.print(" ");
-            StaticV24.print(pxInRow);
-            StaticV24.print(" ");
-            StaticV24.println(pos);
-            */
+    }
 
-            chunks[i] = new Chunk(pos);
-            chunks[i].setColor((byte) i);
-
+    public void GameLoop() {
+        // react on player input
+        int input = keyController.getPlayerKey();
+        StaticV24.println(input);
+        switch (input) {
+            case Key.RIGHT_ARROW:
+                grid.movePlayerRight(player);
+                break;
+            case Key.LEFT_ARROW:
+                grid.movePlayerLeft(player);
+                break;
+            case Key.UP_ARROW:
+                grid.movePlayerUp(player);
+                break;
+            case Key.DOWN_ARROW:
+                grid.movePlayerDown(player);
+                break;
         }
+
+        Time.wait(looptime);
     }
 }

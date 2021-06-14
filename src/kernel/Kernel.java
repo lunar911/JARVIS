@@ -13,5 +13,8 @@ public class Kernel {
         InterruptHandler.initPic();
         MMU mmu = new MMU();
         Game bomberman = new Game();
+        while (true) {
+            bomberman.GameLoop();
+        }
     }
 }
