@@ -1,5 +1,8 @@
 package kernel;
 
+import bios.BIOS;
+import bomberman.Game;
+import helpers.Time;
 import interrupt.InterruptHandler;
 import virtualmemory.MMU;
 
@@ -7,10 +10,8 @@ import virtualmemory.MMU;
 public class Kernel {
 
     public static void main() {
-        InterruptHandler.initPic(); // Do not remove interrupts save lives.
+        InterruptHandler.initPic();
         MMU mmu = new MMU();
-
-        Scheduler scheduler = new Scheduler();
-        scheduler.loop();
+        Game bomberman = new Game();
     }
 }
