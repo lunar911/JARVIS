@@ -5,9 +5,13 @@ import peripheral.StaticV24;
 public class Chunk {
     private int pos = 0; // upper left corner of chunk
     private static final int chunkSize = 20;
+    private byte color;
 
-    public Chunk(int pos) {
+
+    public Chunk(int pos, byte color) {
         this.pos = pos;
+        this.color = color;
+        setColor(this.color);
     }
 
     public void setColor(byte color) {
@@ -19,6 +23,6 @@ public class Chunk {
     }
 
     public void reset() {
-        setColor(Color.GREEN);
+        setColor(color);
     }
 }

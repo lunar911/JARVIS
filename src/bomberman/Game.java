@@ -16,29 +16,33 @@ public class Game {
         grid = new Grid();
         grid.setPlayer(0);
         keyController = new KeyController();
-        player = new Player();
-
+        player = new Player(grid);
     }
 
     public void GameLoop() {
-        // react on player input
-        int input = keyController.getPlayerKey();
-        StaticV24.println(input);
-        switch (input) {
-            case Key.RIGHT_ARROW:
-                grid.movePlayerRight(player);
-                break;
-            case Key.LEFT_ARROW:
-                grid.movePlayerLeft(player);
-                break;
-            case Key.UP_ARROW:
-                grid.movePlayerUp(player);
-                break;
-            case Key.DOWN_ARROW:
-                grid.movePlayerDown(player);
-                break;
-        }
+        processPlayerInput();
 
         Time.wait(looptime);
+    }
+
+    public void processPlayerInput() {
+        int input = keyController.getPlayerKey();
+        switch (input) {
+            case Key.RIGHT_ARROW:
+                player.moveRight();
+                break;
+            case Key.LEFT_ARROW:
+                player.moveLeft();
+                break;
+            case Key.UP_ARROW:
+                player.moveUp();
+                break;
+            case Key.DOWN_ARROW:
+                player.moveDown();
+                break;
+            case Key.SPACE:
+                player.setBomb();
+                break;
+        }
     }
 }

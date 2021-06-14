@@ -19,8 +19,7 @@ public class Grid {
             StaticV24.println(pos);
             */
 
-            chunks[i] = new Chunk(pos);
-            chunks[i].setColor(Color.GREEN);
+            chunks[i] = new Chunk(pos, Color.GREEN);
         }
     }
 
@@ -33,32 +32,8 @@ public class Grid {
         chunks[pos].setColor(PLAYERCOLOR);
     }
 
-    public void movePlayer(Player player, int pos) {
-        if (pos < 0 || pos > 159) return;
-
-        int oldPos = player.getPos();
-        player.setPos(pos);
-        setPlayer(pos);
-        resetChunk(oldPos);
-    }
-
-    public void movePlayerRight(Player player) {
-        int newPos = player.getPos() + 1;
-        movePlayer(player, newPos);
-    }
-
-    public void movePlayerLeft(Player player) {
-        int newPos = player.getPos() - 1;
-        movePlayer(player, newPos);
-    }
-
-    public void movePlayerUp(Player player) {
-        int newPos = player.getPos() - 16;
-        movePlayer(player, newPos);
-    }
-
-    public void movePlayerDown(Player player) {
-        int newPos = player.getPos() + 16;
-        movePlayer(player, newPos);
+    public void setBomb(int pos) {
+        byte BOMBCOLOR = Color.BLACK;
+        chunks[pos].setColor(BOMBCOLOR);
     }
 }
