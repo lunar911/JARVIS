@@ -83,8 +83,8 @@ public class DynamicRuntime {
             }
         }
 
-        int startOfObject = MAGIC.cast2Ref(eO) + eO._r_scalarSize - scalarSize; // Start of current new object
-        int endOfObject = startOfObject + relocNewObject + scalarSize; // offset for next new object
+        int startOfObject = MAGIC.cast2Ref(eO) + eO._r_scalarSize - sizeRequired; // Start of current new object
+        int endOfObject = startOfObject + relocNewObject + sizeRequired; // offset for next new object
 
         for (int i = startOfObject; i < endOfObject; i += 4) {
             MAGIC.wMem32(i, 0); // init memory for object with 0
