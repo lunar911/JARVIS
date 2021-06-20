@@ -20,7 +20,7 @@ public class Game {
 
     public void GameLoop() {
         processPlayerInput();
-
+        bombTick();
         Time.wait(looptime);
     }
 
@@ -43,5 +43,9 @@ public class Game {
                 player.setBomb();
                 break;
         }
+    }
+
+    private void bombTick() {
+
     }
 }

@@ -5,6 +5,7 @@ import peripheral.StaticV24;
 public class Bomb {
     public static final int explodingTimer = 5;
     public int timer = 0;
+    public int size = 2;
     private final Grid grid;
     public int pos;
 
