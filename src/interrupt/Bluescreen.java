@@ -1,6 +1,6 @@
 package interrupt;
 
-import peripheral.StaticV24;
+import bios.BIOS;
 import rte.SClassDesc;
 import rte.SMthdBlock;
 import rte.SPackage;
@@ -9,6 +9,7 @@ import screen.Screen;
 public class Bluescreen {
 
     public static void createBlueScreen(int ebp) {
+        BIOS.leaveGraphicmode();
         Screen.blueScreen();
 
         Screen.directPrintString("EBP", 0, 0, 0x07);

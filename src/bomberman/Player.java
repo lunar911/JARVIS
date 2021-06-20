@@ -1,15 +1,26 @@
 package bomberman;
 
+import peripheral.StaticV24;
+
 public class Player {
 
     public int pos;
     private final Grid grid;
     private boolean settingBomb = false;
     private static final int startPos = 17;
+    public final Bomb[] bombs = new Bomb[3];
 
     public Player(Grid grid) {
-        pos = startPos;
         this.grid = grid;
+        StaticV24.println(pos);
+        pos = startPos;
+
+        StaticV24.println(pos);
+
+        for (int i = 0; i < bombs.length; i++) {
+            bombs[i] = new Bomb();
+        }
+
         grid.setPlayer(startPos);
     }
 
@@ -56,8 +67,23 @@ public class Player {
         movePlayer(newPos);
     }
 
+    public boolean hasInactiveBomb() {
+        for (Bomb bomb : bombs) {
+            if (!bomb.isActive()) return true;
+        }
+        return false;
+    }
+
     public void setBomb() {
-        this.settingBomb = true;
-        grid.setBomb(getPos());
+        if (hasInactiveBomb()) {
+            this.settingBomb = true;
+            for (Bomb bomb : bombs) {
+                if (!bomb.isActive()) {
+                    bomb.setBomb(getPos());
+                    grid.setBomb(getPos());
+                    return;
+                }
+            }
+        }
     }
 }

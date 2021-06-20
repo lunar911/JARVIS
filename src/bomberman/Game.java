@@ -46,6 +46,8 @@ public class Game {
     }
 
     private void bombTick() {
-
+        for(int i = 0; i < player.bombs.length; i++) {
+            player.bombs[i].tick(grid);
+        }
     }
 }

@@ -33,7 +33,7 @@ public class Grid {
 
         // in between
         for (int i = 34; i < 143; i++) {
-            if ( i % 2 == 0 && i / 16 % 2 == 0 ) {
+            if (i % 2 == 0 && i / 16 % 2 == 0) {
                 chunks[i].setWalkable(false);
                 chunks[i].drawPattern(Pattern.UNBREAKABLETILE);
             }
@@ -51,6 +51,20 @@ public class Grid {
 
     public void setBomb(int pos) {
         chunks[pos].drawPattern(Pattern.BOMB);
+    }
+
+    public void setExplosionCenter(int pos) {
+        chunks[pos].drawPattern(Pattern.EXPLOSIONCENTER);
+    }
+
+    public void setExplosionOrthogonal(int pos) {
+        if(pos < 0 || pos > 160) return;
+        if (chunks[pos].isWalkable()) chunks[pos].drawPattern(Pattern.EXPLOSIONORTHOGONAL);
+    }
+
+    public void setExplosionHorizontal(int pos) {
+        if(pos < 0 || pos > 160) return;
+        if (chunks[pos].isWalkable()) chunks[pos].drawPattern(Pattern.EXPLOSIONHORIZONTAL);
     }
 
     public boolean isWalkable(int pos) {

@@ -1,23 +1,31 @@
 package bomberman;
 
-import peripheral.StaticV24;
 
 public class Bomb {
-    public static final int explodingTimer = 5;
-    public int timer = 0;
-    public int size = 2;
-    private final Grid grid;
-    public int pos;
+    private static final int explodingTimer = 5;
+    private int timer = 0;
+    private int pos = 0;
+    private boolean active = false;
 
-    Bomb(Grid grid, int pos) {
-        this.grid = grid;
+    Bomb() {
+    }
+
+    public void setBomb(int pos) {
+        active = true;
         this.pos = pos;
     }
 
-    public void tick() {
-        timer++;
-        if (timer > explodingTimer) {
-            explode();
+    public boolean isActive() {
+        return active;
+    }
+
+    public void tick(Grid grid) {
+        if (active) {
+            timer++;
+            if (timer > explodingTimer) {
+                explode(grid);
+
+            }
         }
     }
 
@@ -25,7 +33,14 @@ public class Bomb {
         timer = 0;
     }
 
-    public void explode() {
-        StaticV24.println("BOOM!");
+    public void explode(Grid grid) {
+        grid.setExplosionCenter(pos);
+        grid.setExplosionHorizontal(pos + 1);
+        grid.setExplosionHorizontal(pos - 1);
+        grid.setExplosionOrthogonal(pos - 16);
+        grid.setExplosionOrthogonal(pos + 16);
+
+        active = false;
+        timer = 0;
     }
 }
