@@ -39,6 +39,7 @@ public class Chunk {
     }
 
     public void reset(byte[] pattern) {
+        setWalkable(true);
         drawPattern(pattern);
     }
 }

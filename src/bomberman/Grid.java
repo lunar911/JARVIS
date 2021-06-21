@@ -42,16 +42,29 @@ public class Grid {
             }
         }
 
+        // set all breakable tiles
+        for(int i = 0; i < 40; i++) {
+            int randpos = RNG.getRandomInt(1337, 160);
+            if(chunks[randpos].isWalkable()) {
+                chunks[randpos].setBreakable(true);
+                chunks[randpos].setWalkable(false);
+                chunks[randpos].drawPattern(Pattern.BREAKABLETILE);
+            }
+        }
+
     }
 
     public void resetChunk(int pos) {
         if(pos < 0 || pos > 160) return;
-        if(chunks[pos].isWalkable())
-        chunks[pos].reset(Pattern.EMPTYTILE);
+        if(chunks[pos].isWalkable() || chunks[pos].isBreakable()) chunks[pos].reset(Pattern.EMPTYTILE);
     }
 
     public void setPlayer(int pos) {
         chunks[pos].drawPattern(Pattern.PLAYER);
+    }
+
+    public void setEnemy(int pos) {
+        chunks[pos].drawPattern(Pattern.ENEMY);
     }
 
     public void setBomb(int pos) {
