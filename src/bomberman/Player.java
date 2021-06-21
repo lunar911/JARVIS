@@ -12,10 +12,7 @@ public class Player {
 
     public Player(Grid grid) {
         this.grid = grid;
-        StaticV24.println(pos);
         pos = startPos;
-
-        StaticV24.println(pos);
 
         for (int i = 0; i < bombs.length; i++) {
             bombs[i] = new Bomb();

@@ -24,7 +24,9 @@ public class Bomb {
             timer++;
             if (timer > explodingTimer) {
                 explode(grid);
-
+            }
+            if (timer > explodingTimer + 1) {
+                cleanUpExplosion(grid);
             }
         }
     }
@@ -39,6 +41,14 @@ public class Bomb {
         grid.setExplosionHorizontal(pos - 1);
         grid.setExplosionOrthogonal(pos - 16);
         grid.setExplosionOrthogonal(pos + 16);
+    }
+
+    public void cleanUpExplosion(Grid grid) {
+        grid.resetChunk(pos);
+        grid.resetChunk(pos + 1);
+        grid.resetChunk(pos - 1);
+        grid.resetChunk(pos - 16);
+        grid.resetChunk(pos + 16);
 
         active = false;
         timer = 0;

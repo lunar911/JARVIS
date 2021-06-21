@@ -1,8 +1,6 @@
 package kernel;
 
-import bios.BIOS;
 import bomberman.Game;
-import helpers.Time;
 import interrupt.InterruptHandler;
 import virtualmemory.MMU;
 
