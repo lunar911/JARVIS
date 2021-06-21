@@ -51,7 +51,6 @@ public class Grid {
                 chunks[randpos].drawPattern(Pattern.BREAKABLETILE);
             }
         }
-
     }
 
     public void resetChunk(int pos) {
@@ -64,6 +63,7 @@ public class Grid {
     }
 
     public void setEnemy(int pos) {
+        if(pos < 0 || pos > 160) return;
         chunks[pos].drawPattern(Pattern.ENEMY);
     }
 
@@ -86,6 +86,7 @@ public class Grid {
     }
 
     public boolean isWalkable(int pos) {
+        if(pos < 0 || pos > 159) return false;
         return chunks[pos].isWalkable();
     }
 }

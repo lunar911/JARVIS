@@ -29,7 +29,7 @@ public class Game {
     public void GameLoop() {
         processPlayerInput();
         bombTick();
-        enemyMove();
+        enemyMove(grid);
 
         Time.wait(looptime);
     }
@@ -62,7 +62,7 @@ public class Game {
     }
 
     private void spawnEnemies() {
-        for (int i = 0; i < enemies.length; i++) {
+        for (Enemy enemy : enemies) {
             int randpos = RNG.getRandomInt(100, 160);
 
             while (!grid.isWalkable(randpos)) {
@@ -70,10 +70,13 @@ public class Game {
             }
 
             grid.setEnemy(randpos);
+            enemy.setPos(randpos);
         }
     }
 
-    private void enemyMove() {
-
+    private void enemyMove(Grid grid) {
+        for (Enemy enemy : enemies) {
+            enemy.move(grid);
+        }
     }
 }
