@@ -12,5 +12,4 @@ public class Pattern {
     public static byte[] EXPLOSIONCENTER = binimp.ByteData.explosioncenter;
     public static byte[] EXPLOSIONHORIZONTAL = binimp.ByteData.explosionhorizontal;
     public static byte[] EXPLOSIONORTHOGONAL = binimp.ByteData.explosionorthogonal;
-
 }

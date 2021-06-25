@@ -10,7 +10,7 @@ public class Game {
     private final KeyController keyController;
     private final Player player;
     private final Enemy[] enemies;
-    private static final int looptime = 3; // ~ 0,5 second
+    private static final int looptime = 3;
 
 
     public Game() {
@@ -23,6 +23,7 @@ public class Game {
         for (int i = 0; i < enemies.length; i++) {
             enemies[i] = new Enemy();
         }
+
         spawnEnemies();
     }
 
@@ -32,6 +33,14 @@ public class Game {
         enemyMove(grid);
 
         Time.wait(looptime);
+    }
+
+    public void win() {
+        grid.win();
+    }
+
+    public void lose() {
+        grid.lose();
     }
 
     public void processPlayerInput() {
@@ -75,8 +84,10 @@ public class Game {
     }
 
     private void enemyMove(Grid grid) {
-        for (Enemy enemy : enemies) {
-            enemy.move(grid);
+        if (RNG.getRandomInt(4022, 4) % 4 == 0) {
+            for (Enemy enemy : enemies) {
+                enemy.move(grid);
+            }
         }
     }
 }

@@ -1,10 +1,9 @@
 package bomberman;
 
-import peripheral.StaticV24;
 
 public class Enemy {
     private int pos = 0;
-    private boolean alive = true;
+    private final boolean alive = true;
 
     public Enemy() {
 
@@ -21,30 +20,30 @@ public class Enemy {
     public void move(Grid grid) {
         int dir = RNG.getRandomInt(230, 3);
 
-        switch (dir){
+        switch (dir) {
             case 0:
-                if(grid.isWalkable(pos - 16)) {
+                if (grid.isWalkable(pos - 16)) {
                     grid.resetChunk(pos);
                     grid.setEnemy(pos - 16);
                     setPos(pos - 16);
                 }
                 break;
             case 1:
-                if(grid.isWalkable(pos + 16)) {
+                if (grid.isWalkable(pos + 16)) {
                     grid.resetChunk(pos);
                     grid.setEnemy(pos + 16);
                     setPos(pos + 16);
                 }
                 break;
             case 2:
-                if(grid.isWalkable(pos - 1)) {
+                if (grid.isWalkable(pos - 1)) {
                     grid.resetChunk(pos);
                     grid.setEnemy(pos - 1);
                     setPos(pos - 1);
                 }
                 break;
             case 3:
-                if(grid.isWalkable(pos + 1)) {
+                if (grid.isWalkable(pos + 1)) {
                     grid.resetChunk(pos);
                     grid.setEnemy(pos + 1);
                     setPos(pos + 1);

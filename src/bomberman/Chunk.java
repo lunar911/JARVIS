@@ -1,7 +1,7 @@
 package bomberman;
 
 public class Chunk {
-    private int pos; // upper left corner of chunk
+    private final int pos; // upper left corner of chunk
     private static final int chunkSize = 20;
     private boolean walkable;
     private boolean breakable;
@@ -22,6 +22,14 @@ public class Chunk {
         }
     }
 
+    public void drawColor(byte color) {
+        for (int y = 0; y < chunkSize; y++) { // write col
+            for (int x = 0; x < chunkSize; x++) { // write row
+                MAGIC.wMem8(0xA0000 + pos + y * 320 + x, color);
+            }
+        }
+    }
+
     public boolean isWalkable() {
         return walkable;
     }
@@ -34,6 +42,7 @@ public class Chunk {
     public void setWalkable(boolean walkable) {
         this.walkable = walkable;
     }
+
     public void setBreakable(boolean breakable) {
         this.breakable = breakable;
     }

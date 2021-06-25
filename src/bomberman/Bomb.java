@@ -31,10 +31,6 @@ public class Bomb {
         }
     }
 
-    public void resetTimer() {
-        timer = 0;
-    }
-
     public void explode(Grid grid) {
         grid.setExplosionCenter(pos);
         grid.setExplosionHorizontal(pos + 1);
