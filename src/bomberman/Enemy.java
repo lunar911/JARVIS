@@ -3,7 +3,7 @@ package bomberman;
 
 public class Enemy {
     private int pos = 0;
-    private final boolean alive = true;
+    private boolean alive = true;
 
     public Enemy() {
 
@@ -16,6 +16,9 @@ public class Enemy {
     public void setPos(int pos) {
         this.pos = pos;
     }
+
+    public void setAlive(boolean alive) {this.alive = alive;}
+    public boolean isAlive() { return alive;}
 
     public void move(Grid grid) {
         int dir = RNG.getRandomInt(230, 3);

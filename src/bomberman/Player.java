@@ -1,7 +1,5 @@
 package bomberman;
 
-import peripheral.StaticV24;
-
 public class Player {
 
     public int pos;

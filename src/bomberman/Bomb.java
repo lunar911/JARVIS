@@ -6,6 +6,7 @@ public class Bomb {
     private int timer = 0;
     private int pos = 0;
     private boolean active = false;
+    private boolean exploding = false;
 
     Bomb() {
     }
@@ -15,8 +16,16 @@ public class Bomb {
         this.pos = pos;
     }
 
+    public int getPos() {
+        return pos;
+    }
+
     public boolean isActive() {
         return active;
+    }
+
+    public boolean isExploding() {
+        return exploding;
     }
 
     public void tick(Grid grid) {
@@ -37,6 +46,7 @@ public class Bomb {
         grid.setExplosionHorizontal(pos - 1);
         grid.setExplosionOrthogonal(pos - 16);
         grid.setExplosionOrthogonal(pos + 16);
+        exploding = true;
     }
 
     public void cleanUpExplosion(Grid grid) {
@@ -45,6 +55,7 @@ public class Bomb {
         grid.resetChunk(pos - 1);
         grid.resetChunk(pos - 16);
         grid.resetChunk(pos + 16);
+        exploding = false;
 
         active = false;
         timer = 0;

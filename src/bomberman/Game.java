@@ -11,6 +11,7 @@ public class Game {
     private final Player player;
     private final Enemy[] enemies;
     private static final int looptime = 3;
+    private static final int playerSafeArea = 51;
 
 
     public Game() {
@@ -31,6 +32,19 @@ public class Game {
         processPlayerInput();
         bombTick();
         enemyMove(grid);
+
+        boolean allDead = false;
+
+        for (Enemy enemy : enemies) {
+            if (enemy.isAlive()) {
+                allDead = false;
+                break;
+            } else {
+                allDead = true;
+            }
+        }
+
+        if(allDead) win();
 
         Time.wait(looptime);
     }
@@ -67,6 +81,31 @@ public class Game {
     private void bombTick() {
         for (int i = 0; i < player.bombs.length; i++) {
             player.bombs[i].tick(grid);
+            if (player.bombs[i].isExploding()) {
+                int bombpos = player.bombs[i].getPos();
+
+                // check if player hit himself
+                if (player.getPos() == bombpos ||
+                        player.getPos() == bombpos - 1 ||
+                        player.getPos() == bombpos + 1 ||
+                        player.getPos() == bombpos + 16 ||
+                        player.getPos() == bombpos - 16) {
+                    lose();
+                }
+
+                // check if bomb hit enemy
+                for (Enemy enemy : enemies) {
+                    if (enemy.isAlive()) {
+                        if (enemy.getPos() == bombpos||
+                                enemy.getPos() == bombpos - 1 ||
+                                enemy.getPos() == bombpos + 1 ||
+                                enemy.getPos() == bombpos + 16 ||
+                                enemy.getPos() == bombpos - 16) {
+                            enemy.setAlive(false);
+                        }
+                    }
+                }
+            }
         }
     }
 
@@ -74,7 +113,7 @@ public class Game {
         for (Enemy enemy : enemies) {
             int randpos = RNG.getRandomInt(100, 160);
 
-            while (!grid.isWalkable(randpos)) {
+            while (!grid.isWalkable(randpos) || randpos < playerSafeArea) {
                 randpos = RNG.getRandomInt(100, 160);
             }
 
@@ -84,9 +123,14 @@ public class Game {
     }
 
     private void enemyMove(Grid grid) {
-        if (RNG.getRandomInt(4022, 4) % 4 == 0) {
+        if (RNG.getRandomInt(4021, 4) % 4 == 0) {
             for (Enemy enemy : enemies) {
-                enemy.move(grid);
+                if (enemy.isAlive()) {
+                    enemy.move(grid);
+                    if (enemy.getPos() == player.getPos()) {
+                        lose();
+                    }
+                }
             }
         }
     }
